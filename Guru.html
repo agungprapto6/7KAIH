@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link id="favicon" rel="icon" type="image/x-icon" href="https://lh3.googleusercontent.com/d/16rll5zsRdwTbR3nF_NmPKwY51tg4tnOn">
+    <title>GURU</title>
+    
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+
+    <style>
+        :root {
+            --primary-color: #4A90E2; 
+            --secondary-color: #7F8C8D; 
+            --success-color: #27AE60;
+            --danger-color: #E74C3C; 
+            --warning-color: #F39C12; 
+            --info-color: #3498DB;
+            --light-color: #FDFEFE; 
+            --dark-color: #34495E; 
+            --background-color: #F7F9FC;
+            --text-color: #34495E; 
+            --card-bg-color: #FFFFFF;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+            --border-radius: 12px;
+            --border-color: #EAECEF;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--background-color); 
+            color: var(--text-color); 
+            line-height: 1.6; 
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* === LOGIN STYLES === */
+        #login-container {
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            padding: 20px; box-sizing: border-box;
+            background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect x="0" y="0" width="100" height="100" fill="%23F7F9FC"/%3E%3Cpath d="M11 10 L10 11 L89 90 L90 89 Z" fill="%23EAECEF"/%3E%3Cpath d="M10 89 L11 90 L90 11 L89 10 Z" fill="%23EAECEF"/%3E%3C/svg%3E'), linear-gradient(135deg, #4A90E2, #50E3C2);
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px; padding: 40px; width: 100%; max-width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .login-card h2 { font-size: 28px; font-weight: 700; margin: 0 0 10px 0; color: var(--dark-color); }
+        .login-card p { color: var(--secondary-color); font-size: 16px; margin-bottom: 30px; }
+        #loginForm .form-group { position: relative; margin-bottom: 25px; }
+        #loginForm .form-group label {
+            position: absolute; top: 15px; left: 15px; color: var(--secondary-color);
+            pointer-events: none; transition: all 0.3s ease; padding: 0 5px; background: none;
+        }
+        #loginForm .form-group input {
+            width: 100%; padding: 15px; box-sizing: border-box; border-radius: 8px;
+            border: 1px solid var(--border-color); background: #fff; font-size: 14px;
+        }
+        #loginForm .form-group input:focus {
+            outline: none; border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+        #loginForm .form-group input:focus + label, #loginForm .form-group input:not(:placeholder-shown) + label {
+            top: -10px; left: 10px; font-size: 12px; color: var(--primary-color);
+            background: var(--card-bg-color);
+        }
+        #loginButton {
+             width: 100%; background: linear-gradient(45deg, var(--info-color), var(--primary-color));
+             color: white; padding: 16px 30px; border: none; border-radius: 8px;
+             font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+             box-shadow: 0 4px 20px rgba(74, 144, 226, 0.3);
+        }
+        #loginButton:hover { transform: translateY(-3px); box-shadow: 0 7px 25px rgba(74, 144, 226, 0.4); }
+        #loginButton:disabled { background: #BDC3C7; cursor: not-allowed; }
+
+        /* === DASHBOARD STYLES === */
+        .header { background: var(--card-bg-color); color: var(--dark-color); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border-bottom: 1px solid var(--border-color); }
+        .header h1 { font-size: 24px; color: var(--primary-color); }
+        #logoutButton { background-color: transparent; color: var(--primary-color); padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.2s ease-in-out; border: 2px solid var(--primary-color); }
+        #logoutButton:hover { background-color: var(--primary-color); color: white; transform: translateY(-2px); }
+        #logoutButton:active { transform: translateY(1px); }
+        
+        .container { padding: 40px; }
+        
+        /* Main Tab Navigation */
+        .container > .view-switcher { border-bottom: 2px solid var(--border-color); margin-bottom: 30px; }
+        .container > .view-switcher .btn { background: none; border: none; box-shadow: none; border-bottom: 4px solid transparent; border-radius: 0; padding: 15px 20px; color: var(--secondary-color); font-weight: 600; transform: none !important; }
+        .container > .view-switcher .btn:hover { color: var(--primary-color); }
+        .container > .view-switcher .btn.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        
+        .card { background-color: var(--card-bg-color); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-top: 25px; border: 1px solid var(--border-color); }
+        h2 { color: var(--dark-color); border-bottom: 2px solid var(--border-color); padding-bottom: 15px; margin-bottom: 25px; font-size: 22px; display: flex; align-items: center; gap: 15px; }
+        #nama-kelas { color: var(--primary-color); font-weight: 700; }
+        .controls-wrapper { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; align-items: flex-start; margin-bottom: 25px; }
+        
+        .btn, .action-btn { 
+            padding: 10px 20px; border: none; cursor: pointer; font-size: 14px; 
+            font-weight: 600; font-family: 'Poppins', sans-serif; border-radius: 8px; 
+            transition: all 0.25s ease; position: relative; color: var(--dark-color); 
+            background-color: #F4F6F6; border: 1px solid var(--border-color);
+            box-shadow: none;
+        }
+        .btn:hover, .action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .btn:active, .action-btn:active { transform: translateY(0); box-shadow: none; }
+        .btn.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+
+        .action-btn.edit { background-color: var(--success-color); color: white; border-color: var(--success-color); }
+        .action-btn.delete { background-color: var(--danger-color); color: white; border-color: var(--danger-color); }
+        .action-btn.download { background-color: var(--info-color); color: white; border-color: var(--info-color); }
+        .btn i, .action-btn i { margin-right: 8px; }
+
+        .filters-container { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; }
+        .date-filter, .search-wrapper { display: flex; align-items: center; gap: 10px; }
+        .date-filter label { font-weight: 500; }
+        .date-filter input[type="date"], #searchSiswaInput { padding: 10px 18px; border: 1px solid var(--border-color); font-size: 14px; border-radius: 8px; transition: all 0.3s; }
+        #searchSiswaInput { padding-left: 40px; width: 250px; }
+        .date-filter input[type="date"]:focus, #searchSiswaInput:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2); }
+        .search-wrapper { position: relative; }
+        .search-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; }
+        
+        .table-wrapper { max-height: 65vh; overflow: auto; border: 1px solid var(--border-color); border-radius: var(--border-radius); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px 18px; border-bottom: 1px solid var(--border-color); text-align: left; white-space: nowrap; }
+        th { background-color: #F7F9FC; color: var(--secondary-color); position: sticky; top: 0; z-index: 2; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); }
+        tfoot { position: sticky; bottom: 0; z-index: 2; }
+        tfoot td { background-color: var(--dark-color); color: white; font-weight: 600; border-top: 2px solid var(--primary-color); }
+        tbody tr { transition: background-color 0.3s; }
+        tbody tr:nth-child(even) { background-color: #FDFEFE; }
+        tbody tr:hover { background-color: #EFF8FF; }
+
+        .loader-container { text-align: center; padding: 50px; }
+        .loader { border: 6px solid #f3f3f3; border-top: 6px solid var(--primary-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-content { background-color: var(--card-bg-color); padding: 30px; border-radius: var(--border-radius); width: 90%; max-width: 800px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h3 { margin: 0; font-size: 20px; color: var(--dark-color); }
+        .modal-header .close { color: #aaa; font-size: 32px; font-weight: bold; cursor: pointer; transition: color 0.2s; }
+        .modal-header .close:hover { color: var(--danger-color); }
+        
+        #edit-form-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 25px; 
+            max-height: 60vh; 
+            overflow-y: auto; 
+            padding: 20px;
+            background-color: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+        #edit-form-grid::-webkit-scrollbar { width: 8px; }
+        #edit-form-grid::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        #edit-form-grid::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+        #edit-form-grid::-webkit-scrollbar-thumb:hover { background: #aaa; }
+        
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #566573; }
+        .form-group input, .form-group select, .form-group textarea { 
+            width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid var(--border-color); 
+            border-radius: 8px; background-color: #fff; transition: all 0.3s ease-in-out;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+
+        .checklist-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; padding-top: 5px; }
+        .checklist-option { 
+            display: flex; align-items: center; gap: 10px; background-color: #fff;
+            padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);
+            transition: all 0.2s ease; cursor: pointer;
+        }
+        .checklist-option:hover { border-color: var(--primary-color); background-color: #F7F9FC; }
+        .checklist-option input[type="checkbox"] { width: 1.2em; height: 1.2em; accent-color: var(--primary-color); cursor: pointer; }
+        .checklist-option label { margin-bottom: 0; font-weight: 400; cursor: pointer; flex: 1; }
+        .lainnya-text-input { display: none; width: 100%; margin-top: 10px; }
+        .full-width { grid-column: 1 / -1; }
+        .full-width > label {
+            font-size: 1.1em; font-weight: 600; color: var(--dark-color);
+            padding-bottom: 8px; margin-bottom: 15px; border-bottom: 1px solid var(--border-color);
+        }
+
+        .komentar-box {
+            background-color: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 50px;
+            font-style: italic;
+            color: #566573;
+            width: 100%;
+        }
+
+        /* === NEW ADMIN & SUPERVISI STYLES === */
+        #adm-form-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+        }
+
+        #supervisi-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Animation for cards */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .adm-card-new {
+            background-color: var(--card-bg-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 0;
+            border: 1px solid var(--border-color);
+            opacity: 0; /* Start hidden for animation */
+            animation: fadeInUp 0.5s ease-out forwards;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .adm-card-new:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        .adm-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .adm-card-body { padding: 25px; }
+        .adm-card-body .btn {
+            background: linear-gradient(45deg, var(--info-color), var(--primary-color));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+        }
+         .adm-card-body .btn:hover {
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3);
+        }
+        .adm-card-footer { padding: 25px; background-color: var(--background-color); border-top: 1px solid var(--border-color); }
+        .adm-card-title { display: flex; align-items: center; gap: 15px; }
+        .adm-card-title i { font-size: 1.8em; color: var(--primary-color); transition: transform 0.3s ease, color 0.3s ease; }
+        .adm-card-new:hover .adm-card-title i {
+            transform: scale(1.2) rotate(-10deg);
+            color: var(--info-color);
+        }
+        .adm-card-title h3 { margin: 0; font-size: 1.3em; color: var(--dark-color); }
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-diperiksa { background-color: var(--secondary-color); }
+        .status-revisi { background-color: var(--warning-color); color: var(--dark-color); }
+        .status-disetujui { background-color: var(--success-color); }
+
+        .adm-card-footer p { margin: 0; }
+        .adm-card-footer strong {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+
+        .supervisi-card-new {
+            background-color: var(--card-bg-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: 1px solid var(--border-color);
+        }
+        .supervisi-card-new:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+        }
+        .supervisi-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            background-color: var(--dark-color);
+            color: white;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+        }
+        .supervisi-card-header h3 { margin: 0; font-size: 1.4em; }
+        .supervisi-card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 25px;
+        }
+        .supervisi-col h4 {
+            font-size: 1.2em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .supervisi-col .form-group {
+            margin-bottom: 20px;
+        }
+        .supervisi-col.feedback {
+            border-left: 1px solid var(--border-color);
+            padding-left: 30px;
+        }
+        .feedback-item { margin-bottom: 20px; }
+        .feedback-item label {
+            display: block;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+        }
+        .nilai-badge {
+            display: inline-block;
+            padding: 8px 18px;
+            background-color: var(--info-color);
+            color: white;
+            font-weight: 700;
+            border-radius: 8px;
+            font-size: 1.1em;
+        }
+
+        /* START: Gaya untuk Input Uploadable */
+        .input-type-switcher { display: flex; margin-bottom: 10px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); background: #F7F9FC; padding: 4px; }
+        .btn-switcher { flex: 1; padding: 8px 12px; background-color: transparent; border: none; cursor: pointer; font-weight: 600; transition: background-color 0.3s, color 0.3s; color: var(--secondary-color); border-radius: 6px;}
+        .btn-switcher.active { background-color: var(--card-bg-color); color: var(--primary-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .btn-switcher i { margin-right: 6px; }
+        .upload-status { font-size: 0.9em; color: var(--secondary-color); margin-top: 8px; }
+        .upload-status i { margin-right: 5px; }
+        /* END: Gaya untuk Input Uploadable */
+
+        .home-link {
+            font-size: 28px;
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+            display: inline-block;
+        }
+        .home-link:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 992px) {
+            .supervisi-card-body { grid-template-columns: 1fr; }
+            .supervisi-col.feedback { border-left: none; padding-left: 0; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;}
+        }
+        @media (max-width: 768px) {
+            .supervisi-card-header, .adm-card-header { flex-direction: column; gap: 15px; align-items: flex-start; }
+            .input-with-button { flex-direction: column; }
+            .input-with-button button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div id="login-container">
+        <div class="login-card">
+            <h2>Login Guru</h2>
+            <p>Masukkan username dan password Anda.</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="text" id="username" placeholder=" " required autocomplete="off">
+                    <label for="username">Email</label>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder=" " required>
+                    <label for="password">Password</label>
+                </div>
+                <button type="submit" id="loginButton">Login</button>
+				<a href="./" class="home-link" title="Back"><i class="fas fa-home"></i></a>
+            </form>
+        </div>
+    </div>
+    
+    <div id="dashboard-container" style="display: none;">
+        <div class="header">
+            <h1><i class="fas fa-chalkboard-teacher"></i> Dashboard Guru</h1>
+            <a href="index.html" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+
+        <div class="container">
+            <div class="view-switcher">
+                <button id="btnLaporan" class="btn active" onclick="switchMainView('laporan', this)"><i class="fas fa-chart-line"></i> Laporan Siswa</button>
+                <button id="btnAdm" class="btn" onclick="switchMainView('adm', this)"><i class="fas fa-file-upload"></i> Input Administrasi</button>
+                <button id="btnSupervisi" class="btn" onclick="switchMainView('supervisi', this)"><i class="fas fa-user-check"></i> Supervisi</button>
+				<a href="index.html" class="btn" class="nav-link"><i class="fas fa-home"></i></a>
+            </div>
+
+            <div id="laporan-container">
+                <div class="card">
+                    <h2><i class="fas fa-table"></i> Data Laporan Siswa Kelas: <span id="nama-kelas"></span></h2>
+                    <div class="controls-wrapper">
+                        <div class="view-switcher">
+                            <button id="btnData" class="btn active" onclick="switchView('data', this)"><i class="fas fa-table"></i> Data Asli</button>
+                            <button id="btnNilai" class="btn" onclick="switchView('nilai', this)"><i class="fas fa-star-half-alt"></i> Nilai Harian</button>
+                            <button id="btnRekap" class="btn" onclick="switchView('rekap', this)"><i class="fas fa-chart-pie"></i> Rekap Kategori</button>
+                            <button id="btnPredikat" class="btn" onclick="switchView('predikat', this)"><i class="fas fa-award"></i> Rekap Predikat</button>
+                            <button class="action-btn download" onclick="downloadRekapPDF()"><i class="fas fa-file-pdf"></i> Download Laporan</button>
+                        </div>
+
+                        <div class="filters-container">
+                            <div class="date-filter">
+                                <label for="startDate">Dari:</label> <input type="date" id="startDate">
+                                <label for="endDate">Sampai:</label> <input type="date" id="endDate">
+                                <button class="btn" onclick="applyDateFilter()"><i class="fas fa-filter"></i> Filter</button>
+                            </div>
+                            <div class="search-wrapper">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchSiswaInput" onkeyup="filterTable()" placeholder="Cari Nama Siswa...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="laporanSiswaTable">
+                            <thead></thead>
+                            <tbody></tbody>
+                            <tfoot></tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="adm-container" style="display: none;">
+                <div class="card">
+                    <h2><i class="fas fa-file-alt"></i> Input Administrasi Guru</h2>
+                    <div id="adm-form-container"></div>
+                </div>
+            </div>
+
+            <div id="supervisi-container" style="display: none;">
+                 <div class="card">
+                    <h2><i class="fas fa-user-check"></i> Jadwal Supervisi</h2>
+                    <div id="supervisi-list-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="messageModal" class="modal">
+         <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3 id="messageModalTitle"></h3>
+                <span class="close" onclick="closeModal('messageModal')">×</span>
+            </div>
+            <p id="messageModalText"></p>
+            <div id="messageModalButtons" style="margin-top: 20px; text-align: right;">
+                <button class="btn" onclick="closeModal('messageModal')">OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-pencil-alt"></i> Edit Laporan Siswa</h3>
+                <span class="close" onclick="closeModal('editModal')">×</span>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editDocId">
+                <div id="edit-form-grid"></div>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button type="button" class="action-btn edit" onclick="saveChanges()"><i class="fas fa-save"></i> Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <script>
+	const _0x513675=_0x7d64;(function(_0xe2d65f,_0x201111){const _0x296a40=_0x7d64,_0x1b885b=_0xe2d65f();while(!![]){try{const _0x4aca60=-parseInt(_0x296a40(0x132))/0x1+-parseInt(_0x296a40(0xeb))/0x2+parseInt(_0x296a40(0x204))/0x3*(parseInt(_0x296a40(0x11d))/0x4)+parseInt(_0x296a40(0x13d))/0x5+-parseInt(_0x296a40(0x1f1))/0x6+parseInt(_0x296a40(0x133))/0x7*(parseInt(_0x296a40(0x20a))/0x8)+-parseInt(_0x296a40(0x91))/0x9*(-parseInt(_0x296a40(0x12f))/0xa);if(_0x4aca60===_0x201111)break;else _0x1b885b['push'](_0x1b885b['shift']());}catch(_0x17fb65){_0x1b885b['push'](_0x1b885b['shift']());}}}(_0x2460,0x95e85));function _0x2460(){const _0x7be2d1=['checked','Tidur\x20Cepat','id-ID','namaSekolah','belajar','error','<div\x20class=\x22form-group\x20full-width\x22><label>Laporan\x20Makanan\x20Sehat</label><div\x20class=\x22checklist-container\x22>','.input-type-switcher\x20button[id^=\x22btn-','\x22\x20placeholder=\x22','5859981ZsKkzv','Keseluruhan','Membantu\x20orang\x20tua\x20di\x20rumah','url','-dokumen','-link\x22\x20class=\x22btn-switcher\x20active\x22\x20onclick=\x22switchInputType(\x27','terbiasaValue','Kategori','Kepala\x20Sekolah','helvetica','bermasyarakat','namaTempat','\x27)\x22><i\x20class=\x22fas\x20fa-edit\x22></i></button>\x20<button\x20class=\x22action-btn\x20delete\x22\x20onclick=\x22deleteData(\x27','adm-form-container','onload','createElement','agungp-23b34','limit','-foto','\x22\x20value=\x22','getElementById','adm','predikat','insertRow','edit-tidurCepat','laporan','edit-makananLauk','text','Error\x20saving\x20ADM:','length','result','logoutButton','>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22edit-','Predikat','kegiatanMasyarakat','makananKarbo','password','setLineWidth','join','terbiasaText','<strong>Rata-rata\x20Persentase</strong>','Ibadah\x201','orderBy','Admin','Bersepeda','insertCell','edit-makananSayur','kegiatan','display','</label><select\x20id=\x22edit-ibadah','Laporan\x207\x20Kebiasaan\x20Anak\x20Indonesia\x20Hebat\x20Kelas\x20\x20','Data\x20supervisi\x20berhasil\x20disimpan/diperbarui!','.view-switcher\x20.btn.active','Gagal\x20membuka\x20data\x20untuk\x20diedit.','URL\x20Google\x20Apps\x20Script\x20belum\x20diatur.\x20Harap\x20edit\x20file\x20HTML\x20ini\x20dan\x20masukkan\x20URL\x20Web\x20App\x20yang\x20benar\x20pada\x20variabel\x20SCRIPT_URL.','Bulu\x20Tangkis','Membersihkan\x20lingkungan\x20rumah','getItem','olahraga','-lainnyaText\x22\x20class=\x22lainnya-text-input\x22\x20placeholder=\x22Tuliskan\x20kegiatan\x20lain...\x22\x20value=\x22','status-','Save\x20Supervisi\x20Error:','-upload\x22\x20class=\x22btn-switcher\x22\x20onclick=\x22switchInputType(\x27','querySelectorAll','Makan\x20Bergizi','bangunPagi','ibadah7','Gagal\x20menyimpan:\x20','Belajar\x20kelompok\x20bersama\x20teman','finalY','Protein','onclick','file-','\x20dari\x20','-tanggal','set','toLowerCase','filter','kelas','-link\x22\x20class=\x22input-mode-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22url\x22\x20id=\x22url-','guruName','edit-form-grid','fill','Ibadah\x207','Belum\x20dinilai','collection','edit-makananKarbo','.container\x20>\x20.view-switcher\x20.btn','jspdf','</td></tr>','1851442CJJaEd','1013129803727','add','<div\x20class=\x22form-group\x22><label\x20for=\x22edit-ibadah','slice','loginButton','Dokumen\x20pengaturan\x20global\x20tidak\x20ditemukan!','Error\x20loading\x20ADM\x20view:','beribadah','Karbo','animationDelay','<i\x20class=\x22fas\x20fa-times-circle\x22\x20style=\x22color:\x20red;\x22></i>\x20Gagal\x20mengunggah:\x20','totalHari','Link\x20Foto\x20Kegiatan','taatValue','<p>Tidak\x20ada\x20jadwal\x20supervisi\x20yang\x20aktif\x20saat\x20ini.</p>','<tr><td\x20colspan=\x2220\x22\x20style=\x22text-align:center;\x20color:red;\x22>Gagal\x20memuat\x20data:\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22adm-card-new\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22adm-card-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22adm-card-title\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22fas\x20fa-file-invoice\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3>','pageSize','Laporan_','\x27,\x20\x27upload\x27,\x20this)\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22fas\x20fa-upload\x22></i>\x20Upload\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22container-','Login\x20Gagal','<option\x20value=\x22','appendChild','Karate/Silat','</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22status-badge\x20','querySelector','Foto','removeChild','true','className','21:00','<p\x20style=\x22color:red;\x22>Tidak\x20dapat\x20memuat\x20data,\x20NIP\x20guru\x20tidak\x20ditemukan.</p>','\x22\x20value=\x22Lainnya\x22\x20','get','-upload\x22\x20class=\x22input-mode-container\x22\x20style=\x22display:\x20none;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22input-with-button\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22file\x22\x20id=\x22file-','namaSiswa','Dokumen','Sayur/Buah','Taat','\x27)\x22><i\x20class=\x22fas\x20fa-trash\x22></i></button>','nipKepsek','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22adm-card-body\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','message','apps','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22feedback-item\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label>Komentar:</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20class=\x22komentar-box\x22>','Kegiatan\x20Olahraga','makananAir','Anda\x20tidak\x20memiliki\x20akses\x20sebagai\x20Guru\x20atau\x20Admin.','none','4ExjUCI','role','classList','Login\x20error:','komentar','Ibadah\x205','Beribadah','replace','ibadahSettings','readAsDataURL','block','stringify','Mengetahui,','edit-materiBelajar','Anda\x20telah\x20berhasil\x20logout.','Error\x20loading\x20Supervisi\x20view:','thead\x20th:last-child','preventDefault','20SuaRKv','Nama\x20Kepala\x20Sekolah','value','546545yTAxjA','42AHYdQr','Rekap_','Ibadah\x206','autoTable','doc','global','Bermasyarakat','#laporanSiswaTable\x20thead','container-','Ibadah\x204','4326250AzpKVq','\x20s/d\x20','Terbiasa','rekap','setFont','>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22edit-','</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22btn\x22\x20onclick=\x22saveGuruSupervisiChanges(\x27','edit-tempatBelajar','-lainnyaText\x27)\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22edit-','clear','supervisiSettings','</div></div>','administrasi_guru','exists','Link\x20Pengumpulan','\x22\x20class=\x22form-group\x20input\x22\x20style=\x22flex-grow:\x201;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22btn\x22\x20onclick=\x22uploadFileToDrive(\x27','name','https://docs.google.com/...','\x27)\x22><i\x20class=\x22fas\x20fa-save\x22></i>\x20Simpan</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22adm-card-footer\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p><strong><i\x20class=\x22fas\x20fa-comment-dots\x22></i>\x20Komentar\x20dari\x20Supervisor:</strong></p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20class=\x22komentar-box\x22>','laporan-container','administrasi','POST','File\x20berhasil\x20diunggah!\x20Link\x20dari\x20Google\x20Drive\x20telah\x20dimasukkan\x20ke\x20dalam\x20kolom\x20URL.\x20Jangan\x20lupa\x20klik\x20\x22Simpan\x22.','userRole','ibadah2','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22checklist-option\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22checkbox\x22\x20id=\x22edit-','getElementsByTagName','includes','push','Tempat','Belum\x20Diperiksa','</p>','Susu','colSpan','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22supervisi-card-new\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22supervisi-card-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3>','<div\x20class=\x22form-group\x20full-width\x22><label>Laporan\x20Ibadah\x20Harian</label><div\x20class=\x22checklist-container\x22>','taatText','<option\x20value=\x22\x22>-\x20Kosong\x20-</option>','Nama\x20Guru','toLocaleDateString','tanggal','selected','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22checklist-option\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22checkbox\x22\x20id=\x22edit-','Upload\x20error:','setFontSize','.pdf','<strong>','makananSayur','map','tanggalKegiatan','supervisi','key','ibadahOptions','<tr><td\x20colspan=\x2220\x22><div\x20class=\x22loader-container\x22><div\x20class=\x22loader\x22></div><p>Memuat\x20data...</p></div></td></tr>','Nama\x20Siswa','json','remove','Peringatan','<button\x20class=\x22action-btn\x20download\x22\x20onclick=\x27downloadPDF(\x22','05:00','files','lastAutoTable','-lainnyaCheck\x22>Lainnya</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>','Lari','laporanSiswaTable','where','Data\x20berhasil\x20diperbarui!','active','<i\x20class=\x22fas\x20fa-times-circle\x22\x20style=\x22color:\x20red;\x22></i>\x20Gagal\x20membaca\x20file.','url-','Sukses','.adm-card-new','guruNip','messageModalTitle','btn','Link\x20Dokumen\x20(RPP,\x20dll)','ibadah','Kelas\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20:\x20','supervisi-container','button','Bangun\x20Pagi','pengaturan','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22><label>Jam\x20Bangun\x20Pagi</label><input\x20type=\x22time\x22\x20id=\x22edit-bangunPagi\x22\x20value=\x22','edit-ibadah','bold','guruKelas','nama','Password\x20salah.','Ibadah\x202','nama-kelas','messageModalText','forEach','marginLeft','Gagal\x20menghapus:\x20','Menolong\x20teman','\x22\x20class=\x22upload-status\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','NIP:\x20','Renang','Tidak\x20Ditemukan','every','Guru\x20Kelas,','show','initializeApp','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22><label>Nama\x20Siswa</label><input\x20type=\x22text\x22\x20id=\x22edit-namaSiswa\x22\x20value=\x22','normal','</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>','getWidth','Disetujui','Guru','<i\x20class=\x22fas\x20fa-check-circle\x22\x20style=\x22color:\x20green;\x22></i>\x20Berhasil!\x20Link\x20telah\x20disalin.','internal','Bermain\x20bersama\x20teman','logo','innerText','ibadah5','waktu','line','style','split','urlDokumen','Tempat\x20Belajar','location','supervisi_guru','center','label','</div><input\x20type=\x22text\x22\x20id=\x22edit-','Logout','tempatBelajar','materiBelajar','textContent','dashboard-container','reload','<p>Tidak\x20ada\x20item\x20administrasi\x20yang\x20aktif\x20saat\x20ini.</p>','Air\x20Putih',';\x22></div>','adm-container','Belajar','status','Sepak\x20Bola','innerHTML','cloneNode','<i\x20class=\x22fas\x20fa-spinner\x20fa-spin\x22></i>\x20Mengunggah\x20file,\x20mohon\x20tunggu...','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','update','docs','\x20onchange=\x22toggleLainnyaInput(this,\x20\x27edit-','edit-tanggalKegiatan','<tr><td\x20colspan=\x2220\x22\x20style=\x22text-align:center;\x22>Tidak\x20ada\x20data\x20laporan\x20pada\x20rentang\x20tanggal\x20yang\x20dipilih.</td></tr>','tidurCepat','ibadah1','makananSusu','href','<button\x20class=\x22action-btn\x20edit\x22\x20onclick=\x22openEditModal(\x27','Username\x20dan\x20Password\x20tidak\x20boleh\x20kosong.','Gagal\x20menyimpan\x20URL.','isGuruLoggedIn','%</strong>','</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>','edit-rincianOlahraga','Error\x20opening\x20edit\x20modal:','Login','grid','long','\x22\x20readonly></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22><label>Tanggal\x20Kegiatan</label><input\x20type=\x22date\x22\x20id=\x22edit-tanggalKegiatan\x22\x20value=\x22','edit-kegiatanMasyarakat','messageModal','\x27,\x20\x27link\x27,\x20this)\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22fas\x20fa-link\x22></i>\x20Link\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22btn-','Data\x20berhasil\x20dihapus!','Olahraga','Tanggal','Konfirmasi\x20Hapus\x20Data','\x22]:checked','link','Apakah\x20Anda\x20yakin\x20ingin\x20menghapus\x20data\x20ini\x20secara\x20permanen?\x20Tindakan\x20ini\x20tidak\x20dapat\x20diurungkan.','status-disetujui','flex','Ibadah\x203','auth','1:1013129803727:web:97bf8baac74e07643884ba','makanBergizi','6010560FveVHc','Melakukan\x20peregangan\x20sebelum\x20mandi','data','aktif','-tanggal\x22\x20value=\x22','startDate','</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22input-type-switcher\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22btn-','Gagal\x20membaca\x20file.','Nama\x20Sekolah','Error','onerror','ibadah4','#laporan-container\x20.view-switcher\x20.btn','Makanan\x20Sehat','username','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','\x22,\x20','save','\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','118023qYAolc','firestore','click','</textarea></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','setItem','Terjadi\x20kesalahan\x20saat\x20proses\x20unggah.','1174984UOIvZB','Dokumen\x20pengaturan\x20global\x20tidak\x20ditemukan.','Aksi','landscape','AIzaSyBzBDsyG-XOD8n_IbwdSmpaAw5lnPqt9QI','<div\x20class=\x22form-group\x20full-width\x22><label>','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22supervisi-col\x20feedback\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h4><i\x20class=\x22fas\x20fa-check-double\x22></i>\x20Umpan\x20Balik\x20Supervisor</h4>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22feedback-item\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label>Nilai:</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22nilai-badge\x22>','status-revisi','Memverifikasi...','endDate','toFixed','nilai','Lainnya','URL\x20berhasil\x20disimpan\x20dan\x20status\x20direset\x20menjadi\x20\x22Belum\x20Diperiksa\x22.','Materi\x20yang\x20Dipelajari','rincianOlahraga','editModal','Laporan\x207\x20Pembiasaan\x20Anak\x20Indonesia\x20Hebat','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22><label>Tempat\x20Belajar</label><input\x20type=\x22text\x22\x20id=\x22edit-tempatBelajar\x22\x20value=\x22','#laporan-container\x20.view-switcher\x20.btn.active','numeric','nip','Belum\x20ada\x20komentar.','<i\x20class=\x22fas\x20fa-times\x22></i>\x20Batal','Data\x20tidak\x20ditemukan,\x20mungkin\x20sudah\x20dihapus.','Senam','<p\x20style=\x22color:red;\x22>Gagal\x20memuat\x20jadwal\x20supervisi:\x20','disabled','-lainnyaCheck\x22\x20name=\x22edit-','td:last-child','trim','body','https://script.google.com/macros/s/AKfycbwc9cOPEvpl1dVb-qIcHEaokHTUXtT10fyn1X8f8Cga-gHkQcb4DpzmQ75sVK84BtqKAQ/exec'];_0x2460=function(){return _0x7be2d1;};return _0x2460();}const firebaseConfig={'apiKey':_0x513675(0x20e),'authDomain':'agungp-23b34.firebaseapp.com','projectId':_0x513675(0xa1),'storageBucket':'agungp-23b34.firebasestorage.app','messagingSenderId':_0x513675(0xec),'appId':_0x513675(0x1ef)};!firebase[_0x513675(0x117)][_0x513675(0xae)]&&firebase[_0x513675(0x1a3)](firebaseConfig);const db=firebase[_0x513675(0x205)](),auth=firebase[_0x513675(0x1ee)](),loginContainer=document[_0x513675(0xa5)]('login-container'),dashboardContainer=document['getElementById'](_0x513675(0x1bf)),loginForm=document[_0x513675(0xa5)]('loginForm'),loginButton=document[_0x513675(0xa5)](_0x513675(0xf0)),namaKelasSpan=document[_0x513675(0xa5)](_0x513675(0x196)),tableHead=document['querySelector'](_0x513675(0x13a)),tableBody=document['querySelector']('#laporanSiswaTable\x20tbody'),tableFoot=document[_0x513675(0x105)]('#laporanSiswaTable\x20tfoot');let fullData=[],filteredData=[],activeView=_0x513675(0x1f3),onModalConfirm=null,schoolInfo={},predikatSettings={},supervisiSettings={},ibadahSettings=[],ibadahOptions={},ibadahThreshold=0x5,batasBangunPagi=_0x513675(0x178),batasTidurCepat=_0x513675(0x10a);function showLoader(){const _0x470a7f=_0x513675;tableHead[_0x470a7f(0x1c8)]='',tableBody['innerHTML']=_0x470a7f(0x172),tableFoot[_0x470a7f(0x1c8)]='';}function showMessage(_0x3b1735,_0xc74d93='Pemberitahuan',_0x2ab8ec=null){const _0x54f46c=_0x513675;document[_0x54f46c(0xa5)]('messageModalTitle')[_0x54f46c(0x1be)]=_0xc74d93,document['getElementById'](_0x54f46c(0x197))[_0x54f46c(0x1be)]=_0x3b1735,onModalConfirm=_0x2ab8ec,document['getElementById'](_0x54f46c(0x1e2))[_0x54f46c(0x11f)][_0x54f46c(0xed)]('show');}function closeModal(_0x208736){const _0x1fb799=_0x513675,_0x45093c=document[_0x1fb799(0xa5)](_0x208736);_0x45093c[_0x1fb799(0x11f)][_0x1fb799(0x175)](_0x1fb799(0x1a2)),_0x208736===_0x1fb799(0x1e2)&&onModalConfirm&&(onModalConfirm(),onModalConfirm=null);}async function loadDashboard(){const _0x4c7cf5=_0x513675,_0x41b818=sessionStorage[_0x4c7cf5(0xca)](_0x4c7cf5(0x192));if(!_0x41b818){namaKelasSpan[_0x4c7cf5(0x1be)]=_0x4c7cf5(0x19f),tableBody['innerHTML']='<tr><td\x20colspan=\x2220\x22\x20style=\x22text-align:center;\x20color:red;\x22>Gagal\x20memuat\x20data:\x20Tidak\x20ada\x20informasi\x20kelas.</td></tr>';return;}namaKelasSpan[_0x4c7cf5(0x1be)]=_0x41b818,showLoader();try{const _0x3e81ae=await db[_0x4c7cf5(0xe6)](_0x4c7cf5(0x18e))['doc'](_0x4c7cf5(0x138))['get']();if(_0x3e81ae[_0x4c7cf5(0x14a)]){const _0x3a20ca=_0x3e81ae['data']();schoolInfo=_0x3a20ca['infoSekolah']||{},schoolInfo[_0x4c7cf5(0x1ad)]&&(document[_0x4c7cf5(0xa5)]('favicon')[_0x4c7cf5(0x1d4)]=schoolInfo[_0x4c7cf5(0x1ad)]),predikatSettings=_0x3a20ca[_0x4c7cf5(0xa7)]||{},supervisiSettings=_0x3a20ca[_0x4c7cf5(0x147)]||{'administrasi':[],'kegiatan':[]},ibadahSettings=_0x3a20ca[_0x4c7cf5(0x125)]||[],ibadahOptions=_0x3a20ca[_0x4c7cf5(0x171)]||{},ibadahThreshold=ibadahSettings[_0x4c7cf5(0xde)](_0x2022d7=>_0x2022d7===!![])['length']||0x1,batasBangunPagi=_0x3a20ca[_0x4c7cf5(0x1b0)]&&_0x3a20ca['waktu']['bangunPagi']||_0x4c7cf5(0x178),batasTidurCepat=_0x3a20ca[_0x4c7cf5(0x1b0)]&&_0x3a20ca[_0x4c7cf5(0x1b0)][_0x4c7cf5(0x1d1)]||_0x4c7cf5(0x10a);}else console[_0x4c7cf5(0x8d)](_0x4c7cf5(0xf1)),showMessage('Gagal\x20memuat\x20pengaturan\x20dari\x20Admin,\x20standar\x20default\x20akan\x20digunakan.',_0x4c7cf5(0x176));const _0x5dd85b=await db['collection'](_0x4c7cf5(0xaa))[_0x4c7cf5(0x17e)](_0x4c7cf5(0xdf),'==',_0x41b818)[_0x4c7cf5(0xbb)]('timestamp','desc')[_0x4c7cf5(0x10d)](),_0x46b3f6=['ID\x20Laporan','Nama\x20Siswa','Tanggal\x20Kegiatan',_0x4c7cf5(0xba),_0x4c7cf5(0x195),'Ibadah\x203','Ibadah\x204',_0x4c7cf5(0x122),_0x4c7cf5(0x135),'Ibadah\x207',_0x4c7cf5(0x18d),_0x4c7cf5(0x89),_0x4c7cf5(0x1e5),_0x4c7cf5(0x1b5),_0x4c7cf5(0x218),_0x4c7cf5(0x139),_0x4c7cf5(0xf4),_0x4c7cf5(0x111),_0x4c7cf5(0x15d),_0x4c7cf5(0xd7),_0x4c7cf5(0x1c2)],_0x408e0e=[_0x46b3f6];_0x5dd85b[_0x4c7cf5(0x198)](_0x21a926=>{const _0x1a3bec=_0x4c7cf5,_0x46741a=_0x21a926[_0x1a3bec(0x1f3)](),_0x2351e5=[_0x21a926['id'],_0x46741a['namaSiswa'],_0x46741a[_0x1a3bec(0x16e)],_0x46741a[_0x1a3bec(0x1d2)]||'',_0x46741a[_0x1a3bec(0x155)]||'',_0x46741a['ibadah3']||'',_0x46741a[_0x1a3bec(0x1fc)]||'',_0x46741a[_0x1a3bec(0x1af)]||'',_0x46741a['ibadah6']||'',_0x46741a[_0x1a3bec(0xd3)]||'',_0x46741a[_0x1a3bec(0xd2)]||'',_0x46741a[_0x1a3bec(0x1d1)]||'',_0x46741a[_0x1a3bec(0x219)]||'',_0x46741a[_0x1a3bec(0x1bc)]||'',_0x46741a[_0x1a3bec(0x1bd)]||'',_0x46741a[_0x1a3bec(0xb3)]||'',_0x46741a[_0x1a3bec(0xb4)]?'Ya':'',_0x46741a[_0x1a3bec(0x16c)]?'Ya':'',_0x46741a[_0x1a3bec(0x1d3)]?'Ya':'',_0x46741a['makananLauk']?'Ya':'',_0x46741a[_0x1a3bec(0x11a)]?'Ya':''];_0x408e0e[_0x1a3bec(0x159)](_0x2351e5);}),fullData=_0x408e0e,applyDateFilter();}catch(_0x2b3b62){console[_0x4c7cf5(0x8d)]('Error\x20fetching\x20data:',_0x2b3b62),tableBody[_0x4c7cf5(0x1c8)]=_0x4c7cf5(0xfb)+_0x2b3b62['message']+_0x4c7cf5(0xea);}}async function handleLogin(_0x315c9d,_0x4e097a){const _0x5bd30e=_0x513675;loginButton[_0x5bd30e(0x82)]=!![],loginButton[_0x5bd30e(0x1be)]=_0x5bd30e(0x212);try{const _0x4ea134=await db[_0x5bd30e(0xe6)]('users')['where'](_0x5bd30e(0x1ff),'==',_0x315c9d)[_0x5bd30e(0xa2)](0x1)[_0x5bd30e(0x10d)]();if(_0x4ea134['empty'])throw new Error('Username\x20tidak\x20ditemukan.');const _0x35d701=_0x4ea134[_0x5bd30e(0x1cd)][0x0][_0x5bd30e(0x1f3)]();if(_0x4e097a===_0x35d701[_0x5bd30e(0x7c)]){if(_0x35d701[_0x5bd30e(0x11e)]!==_0x5bd30e(0x1a9)&&_0x35d701['role']!==_0x5bd30e(0xbc))throw new Error(_0x5bd30e(0x11b));sessionStorage[_0x5bd30e(0x208)]('isGuruLoggedIn',_0x5bd30e(0x108)),sessionStorage[_0x5bd30e(0x208)](_0x5bd30e(0xe1),_0x35d701['nama']),sessionStorage[_0x5bd30e(0x208)]('guruNip',_0x35d701[_0x5bd30e(0x7c)]),sessionStorage['setItem'](_0x5bd30e(0x192),_0x35d701[_0x5bd30e(0xdf)]),sessionStorage[_0x5bd30e(0x208)](_0x5bd30e(0x154),_0x35d701[_0x5bd30e(0x11e)]),loginContainer[_0x5bd30e(0x1b2)][_0x5bd30e(0xc1)]='none',dashboardContainer[_0x5bd30e(0x1b2)][_0x5bd30e(0xc1)]=_0x5bd30e(0x127),loadDashboard();}else throw new Error(_0x5bd30e(0x194));}catch(_0x30137d){console[_0x5bd30e(0x8d)](_0x5bd30e(0x120),_0x30137d),showMessage(_0x30137d['message'],_0x5bd30e(0x100));}finally{loginButton[_0x5bd30e(0x82)]=![],loginButton[_0x5bd30e(0x1be)]=_0x5bd30e(0x1dd);}}window[_0x513675(0x9f)]=function(){const _0x1d2be8=_0x513675;sessionStorage[_0x1d2be8(0xca)](_0x1d2be8(0x1d8))===_0x1d2be8(0x108)?(loginContainer[_0x1d2be8(0x1b2)]['display']=_0x1d2be8(0x11c),dashboardContainer['style'][_0x1d2be8(0xc1)]=_0x1d2be8(0x127),loadDashboard()):(loginContainer[_0x1d2be8(0x1b2)][_0x1d2be8(0xc1)]=_0x1d2be8(0x1ec),dashboardContainer[_0x1d2be8(0x1b2)]['display']='none');},loginForm['addEventListener']('submit',_0x550169=>{const _0x449d4e=_0x513675;_0x550169[_0x449d4e(0x12e)]();const _0x4caad8=document[_0x449d4e(0xa5)](_0x449d4e(0x1ff))[_0x449d4e(0x131)]['trim'](),_0x379beb=document[_0x449d4e(0xa5)](_0x449d4e(0xb5))[_0x449d4e(0x131)][_0x449d4e(0x85)]();if(_0x4caad8&&_0x379beb)handleLogin(_0x4caad8,_0x379beb);else showMessage(_0x449d4e(0x1d6),'Peringatan');});function applyDateFilter(){const _0x1a9416=_0x513675,_0x1d4bd4=document[_0x1a9416(0xa5)](_0x1a9416(0x1f6))[_0x1a9416(0x131)],_0x3dacc3=document[_0x1a9416(0xa5)](_0x1a9416(0x213))[_0x1a9416(0x131)];if(!_0x1d4bd4||!_0x3dacc3)filteredData=[...fullData];else{const _0x3074e5=new Date(_0x1d4bd4),_0x5772cf=new Date(_0x3dacc3),_0x2ec3b5=fullData[_0x1a9416(0xef)](0x1),_0x389a22=_0x2ec3b5[_0x1a9416(0xde)](_0x3f61c7=>{const _0x4cab02=new Date(_0x3f61c7[0x2]);return _0x4cab02>=_0x3074e5&&_0x4cab02<=_0x5772cf;});filteredData=[fullData[0x0],..._0x389a22];}const _0xc03904=document[_0x1a9416(0x105)](_0x1a9416(0x7a))||document['getElementById']('btnData');switchView(_0xc03904['id'][_0x1a9416(0x124)](_0x1a9416(0x187),'')[_0x1a9416(0xdd)](),_0xc03904);}function filterTable(){const _0x35f6ef=_0x513675,_0x523661=document[_0x35f6ef(0xa5)]('searchSiswaInput')['value'][_0x35f6ef(0xdd)](),_0x4da5d2=tableBody[_0x35f6ef(0x157)]('tr'),_0x3784aa=activeView===_0x35f6ef(0x1f3)||activeView==='nilai'?0x1:0x0;for(let _0x39e1e7=0x0;_0x39e1e7<_0x4da5d2[_0x35f6ef(0xae)];_0x39e1e7++){const _0x3c35a2=_0x4da5d2[_0x39e1e7][_0x35f6ef(0x157)]('td')[_0x3784aa];if(_0x3c35a2){const _0x4944b0=_0x3c35a2[_0x35f6ef(0x1be)]||_0x3c35a2[_0x35f6ef(0x1ae)];_0x4da5d2[_0x39e1e7]['style'][_0x35f6ef(0xc1)]=_0x4944b0['toLowerCase']()[_0x35f6ef(0x158)](_0x523661)?'':_0x35f6ef(0x11c);}}}function switchView(_0x11c406,_0x2750e6){const _0x185a03=_0x513675;document[_0x185a03(0xd0)](_0x185a03(0x1fd))[_0x185a03(0x198)](_0x218bfa=>_0x218bfa['classList']['remove']('active')),_0x2750e6[_0x185a03(0x11f)]['add']('active'),activeView=_0x11c406,populateTable(_0x11c406),filterTable();}function populateTable(_0x121a55){const _0x46bd3c=_0x513675;tableHead[_0x46bd3c(0x1c8)]='',tableBody[_0x46bd3c(0x1c8)]='',tableFoot['innerHTML']='';if(filteredData[_0x46bd3c(0xae)]<=0x1){tableBody[_0x46bd3c(0x1c8)]=_0x46bd3c(0x1d0);return;}const _0x456eb7=filteredData[_0x46bd3c(0xef)](0x1);if(_0x121a55===_0x46bd3c(0x1f3)){const _0x54b7f0=document[_0x46bd3c(0xa0)]('tr');filteredData[0x0][_0x46bd3c(0x198)](_0x16c7c0=>_0x54b7f0[_0x46bd3c(0x102)](document[_0x46bd3c(0xa0)]('th'))[_0x46bd3c(0x1be)]=_0x16c7c0),_0x54b7f0['appendChild'](document['createElement']('th'))[_0x46bd3c(0x1be)]=_0x46bd3c(0x20c),tableHead[_0x46bd3c(0x102)](_0x54b7f0),_0x456eb7['forEach'](_0x2228b2=>{const _0xe0a6dc=_0x46bd3c,_0x55993b=document[_0xe0a6dc(0xa0)]('tr');_0x2228b2[_0xe0a6dc(0x198)](_0xec410a=>_0x55993b[_0xe0a6dc(0xbe)]()[_0xe0a6dc(0x1be)]=_0xec410a);const _0x497148=_0x2228b2[0x0];_0x55993b[_0xe0a6dc(0xbe)]()['innerHTML']=_0xe0a6dc(0x1d5)+_0x497148+_0xe0a6dc(0x9d)+_0x497148+_0xe0a6dc(0x113),tableBody[_0xe0a6dc(0x102)](_0x55993b);});}else{if(_0x121a55===_0x46bd3c(0x215)){const _0x330f54=[_0x46bd3c(0x173),_0x46bd3c(0x1e6),_0x46bd3c(0xba),_0x46bd3c(0x195),_0x46bd3c(0x1ed),_0x46bd3c(0x13c),_0x46bd3c(0x122),_0x46bd3c(0x135),_0x46bd3c(0xe4),_0x46bd3c(0x18d),'Tidur\x20Cepat',_0x46bd3c(0x1e5),_0x46bd3c(0x1c5),_0x46bd3c(0x139),_0x46bd3c(0x1fe)],_0x3bde2b=document[_0x46bd3c(0xa0)]('tr');_0x330f54[_0x46bd3c(0x198)](_0x5ac163=>_0x3bde2b[_0x46bd3c(0x102)](document[_0x46bd3c(0xa0)]('th'))[_0x46bd3c(0x1be)]=_0x5ac163),tableHead['appendChild'](_0x3bde2b);const _0x435fb9=_0x456eb7['length'],_0x19bd23=new Array(_0x330f54[_0x46bd3c(0xae)]-0x2)[_0x46bd3c(0xe3)](0x0);_0x456eb7[_0x46bd3c(0x198)](_0x146b6a=>{const _0x512a92=_0x46bd3c,_0x45ca1b=document['createElement']('tr');_0x45ca1b['insertCell']()[_0x512a92(0x1be)]=_0x146b6a[0x1],_0x45ca1b[_0x512a92(0xbe)]()[_0x512a92(0x1be)]=_0x146b6a[0x2];let _0x202d9c=0x0;for(let _0x402d65=0x3;_0x402d65<=0x9;_0x402d65++){const _0x451f40=String(_0x146b6a[_0x402d65])[_0x512a92(0x85)]()?0x1:0x0;_0x45ca1b[_0x512a92(0xbe)]()[_0x512a92(0x1be)]=_0x451f40||'';if(_0x451f40===0x1)_0x19bd23[_0x202d9c]++;_0x202d9c++;}const _0x32d9a2=_0x146b6a[0xa]&&_0x146b6a[0xa]<=batasBangunPagi?0x1:0x0;if(_0x32d9a2===0x1)_0x19bd23[_0x202d9c]++;_0x45ca1b[_0x512a92(0xbe)]()[_0x512a92(0x1be)]=_0x32d9a2||'',_0x202d9c++;const _0x38ebf5=_0x146b6a[0xb]&&_0x146b6a[0xb]<=batasTidurCepat?0x1:0x0;if(_0x38ebf5===0x1)_0x19bd23[_0x202d9c]++;_0x45ca1b[_0x512a92(0xbe)]()[_0x512a92(0x1be)]=_0x38ebf5||'',_0x202d9c++;const _0x366048=String(_0x146b6a[0xc])[_0x512a92(0x85)]()?0x1:0x0;if(_0x366048===0x1)_0x19bd23[_0x202d9c]++;_0x45ca1b[_0x512a92(0xbe)]()[_0x512a92(0x1be)]=_0x366048||'',_0x202d9c++;const _0x15331c=String(_0x146b6a[0xd])[_0x512a92(0x85)]()&&String(_0x146b6a[0xe])[_0x512a92(0x85)]()?0x1:0x0;if(_0x15331c===0x1)_0x19bd23[_0x202d9c]++;_0x45ca1b[_0x512a92(0xbe)]()[_0x512a92(0x1be)]=_0x15331c||'',_0x202d9c++;const _0x522b3a=String(_0x146b6a[0xf])[_0x512a92(0x85)]()?0x1:0x0;if(_0x522b3a===0x1)_0x19bd23[_0x202d9c]++;_0x45ca1b['insertCell']()[_0x512a92(0x1be)]=_0x522b3a||'',_0x202d9c++;const _0x3e322f=_0x146b6a[_0x512a92(0xef)](0x10,0x15)[_0x512a92(0x1a0)](_0x19aa52=>_0x19aa52==='Ya')?0x1:0x0;if(_0x3e322f===0x1)_0x19bd23[_0x202d9c]++;_0x45ca1b['insertCell']()[_0x512a92(0x1be)]=_0x3e322f||'',tableBody[_0x512a92(0x102)](_0x45ca1b);});if(_0x435fb9>0x0){const _0x7d2710=tableFoot[_0x46bd3c(0xa8)](),_0x5c05d1=_0x7d2710[_0x46bd3c(0xbe)]();_0x5c05d1[_0x46bd3c(0x15e)]=0x2,_0x5c05d1[_0x46bd3c(0x1c8)]=_0x46bd3c(0xb9),_0x19bd23[_0x46bd3c(0x198)](_0x1c9e72=>{const _0x10d5fb=_0x46bd3c,_0x334c25=_0x1c9e72/_0x435fb9*0x64,_0x2363b5=_0x7d2710[_0x10d5fb(0xbe)]();_0x2363b5[_0x10d5fb(0x1c8)]=_0x10d5fb(0x16b)+_0x334c25[_0x10d5fb(0x214)](0x1)+_0x10d5fb(0x1d9);});}}else{if(_0x121a55==='rekap'||_0x121a55===_0x46bd3c(0xa7)){const _0x53bf3b=['Nama\x20Siswa','Beribadah',_0x46bd3c(0x89),'Bangun\x20Pagi',_0x46bd3c(0x1e5),_0x46bd3c(0x1c5),_0x46bd3c(0x139),_0x46bd3c(0xd1)];if(_0x121a55===_0x46bd3c(0xa7))_0x53bf3b['push']('Aksi');const _0x3645a6=document[_0x46bd3c(0xa0)]('tr');_0x53bf3b['forEach'](_0x3beb0d=>_0x3645a6['appendChild'](document[_0x46bd3c(0xa0)]('th'))['textContent']=_0x3beb0d),tableHead['appendChild'](_0x3645a6);const _0x1f0dbf={};_0x456eb7[_0x46bd3c(0x198)](_0x22c65c=>{const _0x4859a9=_0x46bd3c,_0x307bd3=_0x22c65c[0x1];if(!_0x1f0dbf[_0x307bd3])_0x1f0dbf[_0x307bd3]={'totalHari':0x0,'beribadah':0x0,'tidurCepat':0x0,'bangunPagi':0x0,'olahraga':0x0,'belajar':0x0,'bermasyarakat':0x0,'makanBergizi':0x0};_0x1f0dbf[_0x307bd3][_0x4859a9(0xf7)]++;let _0x183e54=0x0;for(let _0x3161ce=0x0;_0x3161ce<0x7;_0x3161ce++){if(ibadahSettings[_0x3161ce]===!![]&&String(_0x22c65c[_0x3161ce+0x3])[_0x4859a9(0x85)]())_0x183e54++;}if(ibadahThreshold>0x0&&_0x183e54>=ibadahThreshold)_0x1f0dbf[_0x307bd3][_0x4859a9(0xf3)]++;if(_0x22c65c[0xb]&&_0x22c65c[0xb]<=batasTidurCepat)_0x1f0dbf[_0x307bd3]['tidurCepat']++;if(_0x22c65c[0xa]&&_0x22c65c[0xa]<=batasBangunPagi)_0x1f0dbf[_0x307bd3][_0x4859a9(0xd2)]++;if(String(_0x22c65c[0xc])[_0x4859a9(0x85)]())_0x1f0dbf[_0x307bd3][_0x4859a9(0xcb)]++;if(String(_0x22c65c[0xd])[_0x4859a9(0x85)]()&&String(_0x22c65c[0xe])[_0x4859a9(0x85)]())_0x1f0dbf[_0x307bd3][_0x4859a9(0x8c)]++;if(String(_0x22c65c[0xf])[_0x4859a9(0x85)]())_0x1f0dbf[_0x307bd3]['bermasyarakat']++;if(_0x22c65c['slice'](0x10,0x15)[_0x4859a9(0x1a0)](_0x4261cc=>_0x4261cc==='Ya'))_0x1f0dbf[_0x307bd3][_0x4859a9(0x1f0)]++;});for(const _0x3f8147 in _0x1f0dbf){const _0x23da59=_0x1f0dbf[_0x3f8147],_0x3cc859=document[_0x46bd3c(0xa0)]('tr');_0x3cc859[_0x46bd3c(0xbe)]()[_0x46bd3c(0x1be)]=_0x3f8147;const _0x1d4fcb=['beribadah',_0x46bd3c(0x1d1),_0x46bd3c(0xd2),'olahraga',_0x46bd3c(0x8c),_0x46bd3c(0x9b),_0x46bd3c(0x1f0)],_0x5814ae={};_0x1d4fcb[_0x46bd3c(0x198)](_0x39ba36=>{const _0x22003d=_0x46bd3c,_0x1d1d81=_0x3cc859[_0x22003d(0xbe)]();if(_0x121a55===_0x22003d(0x140))_0x1d1d81[_0x22003d(0x1be)]=_0x23da59[_0x39ba36]+_0x22003d(0xda)+_0x23da59[_0x22003d(0xf7)]+'\x20hari';else{let _0x218936=predikatSettings['kurangText']||'Kurang';if(_0x23da59[_0x22003d(0xf7)]>0x0){const _0x1386a8=_0x23da59[_0x39ba36]/_0x23da59[_0x22003d(0xf7)]*0x64;if(_0x1386a8>(predikatSettings[_0x22003d(0xf9)]||0x50))_0x218936=predikatSettings[_0x22003d(0x161)]||_0x22003d(0x112);else{if(_0x1386a8>(predikatSettings[_0x22003d(0x97)]||0x3c))_0x218936=predikatSettings[_0x22003d(0xb8)]||_0x22003d(0x13f);}}_0x1d1d81[_0x22003d(0x1be)]=_0x218936,_0x5814ae[_0x39ba36]=_0x218936;}});if(_0x121a55===_0x46bd3c(0xa7)){const _0x2e6175=_0x3cc859[_0x46bd3c(0xbe)](),_0x2fbe20=JSON['stringify'](_0x5814ae);_0x2e6175[_0x46bd3c(0x1c8)]=_0x46bd3c(0x177)+_0x3f8147['replace'](/'/g,'\x5c\x27')+_0x46bd3c(0x201)+_0x2fbe20+')\x27><i\x20class=\x22fas\x20fa-download\x22></i>\x20PDF</button>';}tableBody['appendChild'](_0x3cc859);}}}}}function downloadPDF(_0x5031da,_0xd0f90d){const _0x5bf78f=_0x513675,{jsPDF:_0x5c8ea7}=window[_0x5bf78f(0xe9)],_0x194c59=new _0x5c8ea7(),_0x438d04=new Date()[_0x5bf78f(0x164)](_0x5bf78f(0x8a),{'day':'2-digit','month':_0x5bf78f(0x1df),'year':_0x5bf78f(0x7b)}),_0x125d45=document[_0x5bf78f(0xa5)]('startDate')['value'],_0x133fca=document[_0x5bf78f(0xa5)](_0x5bf78f(0x213))['value'],_0x487373=_0x125d45&&_0x133fca?_0x125d45+_0x5bf78f(0x13e)+_0x133fca:_0x5bf78f(0x92),_0x263a18=schoolInfo[_0x5bf78f(0x9c)]?schoolInfo[_0x5bf78f(0x9c)][_0x5bf78f(0x1b3)](',')[0x0]:_0x5bf78f(0x15a);_0x194c59[_0x5bf78f(0x169)](0x10),_0x194c59[_0x5bf78f(0x141)](_0x5bf78f(0x9a),_0x5bf78f(0x191)),_0x194c59[_0x5bf78f(0xac)](schoolInfo[_0x5bf78f(0x8b)]||_0x5bf78f(0x1f9),_0x194c59[_0x5bf78f(0x1ab)]['pageSize'][_0x5bf78f(0x1a7)]()/0x2,0x14,{'align':_0x5bf78f(0x1b8)}),_0x194c59['setFontSize'](0xa),_0x194c59[_0x5bf78f(0x141)](_0x5bf78f(0x9a),_0x5bf78f(0x1a5)),_0x194c59[_0x5bf78f(0xac)](_0x5bf78f(0x21b),_0x194c59[_0x5bf78f(0x1ab)]['pageSize'][_0x5bf78f(0x1a7)]()/0x2,0x1a,{'align':_0x5bf78f(0x1b8)}),_0x194c59[_0x5bf78f(0xb6)](0.5),_0x194c59[_0x5bf78f(0x1b1)](0x14,0x20,0xbe,0x20),_0x194c59['setFontSize'](0xc),_0x194c59['setFont'](_0x5bf78f(0x9a),_0x5bf78f(0x1a5)),_0x194c59[_0x5bf78f(0xac)]('Nama\x20Siswa\x20:\x20'+_0x5031da,0x14,0x32),_0x194c59[_0x5bf78f(0xac)](_0x5bf78f(0x18a)+(sessionStorage[_0x5bf78f(0xca)]('guruKelas')||''),0x14,0x39),_0x194c59[_0x5bf78f(0xac)]('Periode\x20\x20\x20\x20\x20\x20\x20\x20:\x20'+_0x487373,0x14,0x40);const _0x202571=[],_0x3fc5bc={'beribadah':_0x5bf78f(0x123),'tidurCepat':_0x5bf78f(0x89),'bangunPagi':_0x5bf78f(0x18d),'olahraga':_0x5bf78f(0x1e5),'belajar':_0x5bf78f(0x1c5),'bermasyarakat':'Bermasyarakat','makanBergizi':'Makan\x20Bergizi'};for(const _0x4d2ff8 in _0xd0f90d){if(_0x3fc5bc[_0x4d2ff8])_0x202571[_0x5bf78f(0x159)]([_0x3fc5bc[_0x4d2ff8],_0xd0f90d[_0x4d2ff8]]);}_0x194c59['autoTable']({'head':[[_0x5bf78f(0x98),_0x5bf78f(0xb2)]],'body':_0x202571,'startY':0x52,'theme':_0x5bf78f(0x1de),'headStyles':{'fillColor':[0x34,0x3a,0x40]}});const _0x3bd694=_0x194c59[_0x5bf78f(0x17a)][_0x5bf78f(0xd6)]+0xf;_0x194c59[_0x5bf78f(0x169)](0xc);const _0xd16a84=0x7d,_0x24172d=0x14;_0x194c59[_0x5bf78f(0xac)](_0x263a18+',\x20'+_0x438d04,_0xd16a84,_0x3bd694),_0x194c59[_0x5bf78f(0xac)](_0x5bf78f(0x129),_0x24172d,_0x3bd694+0xa),_0x194c59[_0x5bf78f(0xac)]('Kepala\x20Sekolah',_0x24172d,_0x3bd694+0x11),_0x194c59[_0x5bf78f(0xac)](schoolInfo['namaKepsek']||_0x5bf78f(0x130),_0x24172d,_0x3bd694+0x2a),_0x194c59[_0x5bf78f(0xac)](_0x5bf78f(0x19d)+(schoolInfo[_0x5bf78f(0x114)]||'-'),_0x24172d,_0x3bd694+0x31),_0x194c59[_0x5bf78f(0xac)](_0x5bf78f(0x1a1),_0xd16a84,_0x3bd694+0xa),_0x194c59[_0x5bf78f(0xac)](sessionStorage[_0x5bf78f(0xca)](_0x5bf78f(0xe1))||'Nama\x20Guru',_0xd16a84,_0x3bd694+0x2a),_0x194c59['text']('NIP:\x20'+(sessionStorage[_0x5bf78f(0xca)](_0x5bf78f(0x185))||'-'),_0xd16a84,_0x3bd694+0x31),_0x194c59['save'](_0x5bf78f(0xfe)+_0x5031da+'_'+_0x487373+_0x5bf78f(0x16a));}function downloadRekapPDF(){const _0x23162b=_0x513675,{jsPDF:_0x287861}=window[_0x23162b(0xe9)],_0x32a39e=new _0x287861({'orientation':_0x23162b(0x20d)}),_0x57b4a0=document[_0x23162b(0x105)](_0x23162b(0xc5)),_0x4324ee=_0x57b4a0?_0x57b4a0[_0x23162b(0x1be)][_0x23162b(0x85)]():'Laporan',_0x3ce856=document[_0x23162b(0xa5)](_0x23162b(0x1f6))[_0x23162b(0x131)],_0x4d574d=document['getElementById'](_0x23162b(0x213))[_0x23162b(0x131)],_0x5c637b=_0x3ce856&&_0x4d574d?_0x3ce856+_0x23162b(0x13e)+_0x4d574d:_0x23162b(0x92),_0x447d7e=new Date()[_0x23162b(0x164)](_0x23162b(0x8a),{'day':'2-digit','month':'long','year':_0x23162b(0x7b)}),_0x6d7f6d=schoolInfo[_0x23162b(0x9c)]?schoolInfo[_0x23162b(0x9c)][_0x23162b(0x1b3)](',')[0x0]:'Tempat';_0x32a39e['setFontSize'](0x10),_0x32a39e[_0x23162b(0x141)](_0x23162b(0x9a),_0x23162b(0x191)),_0x32a39e[_0x23162b(0xac)](schoolInfo[_0x23162b(0x8b)]||_0x23162b(0x1f9),_0x32a39e['internal']['pageSize']['getWidth']()/0x2,0xf,{'align':_0x23162b(0x1b8)}),_0x32a39e[_0x23162b(0x169)](0xc),_0x32a39e[_0x23162b(0x141)](_0x23162b(0x9a),_0x23162b(0x1a5)),_0x32a39e[_0x23162b(0xac)](_0x23162b(0xc3)+namaKelasSpan[_0x23162b(0x1be)],_0x32a39e[_0x23162b(0x1ab)][_0x23162b(0xfd)][_0x23162b(0x1a7)]()/0x2,0x16,{'align':_0x23162b(0x1b8)}),_0x32a39e['text']('Periode:\x20'+_0x5c637b,_0x32a39e[_0x23162b(0x1ab)][_0x23162b(0xfd)][_0x23162b(0x1a7)]()/0x2,0x1d,{'align':'center'}),_0x32a39e[_0x23162b(0xb6)](0.5),_0x32a39e[_0x23162b(0x1b1)](0x14,0x23,_0x32a39e[_0x23162b(0x1ab)][_0x23162b(0xfd)]['getWidth']()-0x14,0x23);const _0x399a5f=document[_0x23162b(0xa5)](_0x23162b(0x17d))[_0x23162b(0x1c9)](!![]),_0x379300=_0x399a5f[_0x23162b(0x105)](_0x23162b(0x12d));_0x379300&&_0x379300[_0x23162b(0x1be)][_0x23162b(0x85)]()===_0x23162b(0x20c)&&(_0x379300[_0x23162b(0x175)](),_0x399a5f[_0x23162b(0xd0)]('tbody\x20tr')['forEach'](_0x33a1aa=>{const _0xcbcc98=_0x23162b,_0x360429=_0x33a1aa[_0xcbcc98(0x105)](_0xcbcc98(0x84));if(_0x360429)_0x360429[_0xcbcc98(0x175)]();}));_0x399a5f[_0x23162b(0x1b2)]['display']=_0x23162b(0x11c),document[_0x23162b(0x86)][_0x23162b(0x102)](_0x399a5f),_0x32a39e[_0x23162b(0x136)]({'html':_0x399a5f,'startY':0x2a,'theme':'grid','headStyles':{'fillColor':[0x34,0x3a,0x40]}}),document['body'][_0x23162b(0x107)](_0x399a5f);const _0x5b83ae=_0x32a39e[_0x23162b(0x17a)][_0x23162b(0xd6)]+0xf>0x96?_0x32a39e['lastAutoTable'][_0x23162b(0xd6)]+0xf:0x96,_0x263d3b=0xc8,_0x73cce5=0x14;_0x32a39e[_0x23162b(0x169)](0xc),_0x32a39e[_0x23162b(0xac)](_0x6d7f6d+',\x20'+_0x447d7e,_0x263d3b,_0x5b83ae),_0x32a39e[_0x23162b(0xac)](_0x23162b(0x129),_0x73cce5,_0x5b83ae+0x7),_0x32a39e[_0x23162b(0xac)](_0x23162b(0x99),_0x73cce5,_0x5b83ae+0xe),_0x32a39e['text'](schoolInfo['namaKepsek']||'Nama\x20Kepala\x20Sekolah',_0x73cce5,_0x5b83ae+0x25),_0x32a39e[_0x23162b(0xac)]('NIP:\x20'+(schoolInfo[_0x23162b(0x114)]||'-'),_0x73cce5,_0x5b83ae+0x2c),_0x32a39e['text'](_0x23162b(0x1a1),_0x263d3b,_0x5b83ae+0x7),_0x32a39e[_0x23162b(0xac)](sessionStorage[_0x23162b(0xca)](_0x23162b(0xe1))||_0x23162b(0x163),_0x263d3b,_0x5b83ae+0x25),_0x32a39e[_0x23162b(0xac)](_0x23162b(0x19d)+(sessionStorage['getItem'](_0x23162b(0x185))||'-'),_0x263d3b,_0x5b83ae+0x2c),_0x32a39e[_0x23162b(0x202)](_0x23162b(0x134)+namaKelasSpan['textContent']+'_'+activeView+'_'+_0x5c637b+_0x23162b(0x16a));}async function openEditModal(_0x253611){const _0x4aaa06=_0x513675;try{const _0x9767d7=db[_0x4aaa06(0xe6)]('laporan')[_0x4aaa06(0x137)](_0x253611),_0x425310=await _0x9767d7[_0x4aaa06(0x10d)]();if(!_0x425310[_0x4aaa06(0x14a)]){showMessage(_0x4aaa06(0x7f),_0x4aaa06(0x1fa));return;}const _0x47f89a=_0x425310[_0x4aaa06(0x1f3)](),_0x18bf84=document['getElementById'](_0x4aaa06(0xe2));_0x18bf84[_0x4aaa06(0x1c8)]='',document[_0x4aaa06(0xa5)]('editDocId')[_0x4aaa06(0x131)]=_0x253611,_0x18bf84['innerHTML']+=_0x4aaa06(0x1a4)+(_0x47f89a[_0x4aaa06(0x10f)]||'')+_0x4aaa06(0x1e0)+(_0x47f89a[_0x4aaa06(0x16e)]||'')+'\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20';let _0x14191b=_0x4aaa06(0x160);for(let _0x324177=0x1;_0x324177<=0x7;_0x324177++){if(ibadahSettings[_0x324177-0x1]===!![]){const _0x307ecc=ibadahOptions[_0x4aaa06(0x189)+_0x324177]||[];let _0x182d72=_0x4aaa06(0x162);_0x307ecc[_0x4aaa06(0x198)](_0x1dbca4=>{const _0x1dbb19=_0x4aaa06;_0x182d72+=_0x1dbb19(0x101)+_0x1dbca4+'\x22\x20'+(_0x47f89a[_0x1dbb19(0x189)+_0x324177]===_0x1dbca4?_0x1dbb19(0x166):'')+'>'+_0x1dbca4+'</option>';}),_0x14191b+=_0x4aaa06(0xee)+_0x324177+'\x22>Ibadah\x20'+_0x324177+_0x4aaa06(0xc2)+_0x324177+'\x22>'+_0x182d72+'</select></div>';}}_0x14191b+=_0x4aaa06(0x148),_0x18bf84[_0x4aaa06(0x1c8)]+=_0x14191b,_0x18bf84[_0x4aaa06(0x1c8)]+=_0x4aaa06(0x18f)+(_0x47f89a[_0x4aaa06(0xd2)]||'')+'\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22><label>Jam\x20Tidur\x20Cepat</label><input\x20type=\x22time\x22\x20id=\x22edit-tidurCepat\x22\x20value=\x22'+(_0x47f89a[_0x4aaa06(0x1d1)]||'')+'\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20';const _0x18aba9=[_0x4aaa06(0x80),_0x4aaa06(0xbd),_0x4aaa06(0x17c),_0x4aaa06(0x19e),_0x4aaa06(0xc8),_0x4aaa06(0x1c7),_0x4aaa06(0x103),_0x4aaa06(0x1f2)];_0x18bf84[_0x4aaa06(0x1c8)]+=createChecklistGroup(_0x4aaa06(0x219),_0x4aaa06(0x119),_0x18aba9,_0x47f89a['rincianOlahraga']||'');const _0x23e1bf=[_0x4aaa06(0x1ac),_0x4aaa06(0x93),_0x4aaa06(0xd5),_0x4aaa06(0xc9),_0x4aaa06(0x19b)];_0x18bf84[_0x4aaa06(0x1c8)]+=createChecklistGroup(_0x4aaa06(0xb3),'Kegiatan\x20Bermasyarakat',_0x23e1bf,_0x47f89a['kegiatanMasyarakat']||''),_0x18bf84[_0x4aaa06(0x1c8)]+=_0x4aaa06(0x21c)+(_0x47f89a[_0x4aaa06(0x1bc)]||'')+'\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x20full-width\x22><label>Materi\x20yang\x20Dipelajari</label><textarea\x20id=\x22edit-materiBelajar\x22\x20rows=\x223\x22>'+(_0x47f89a[_0x4aaa06(0x1bd)]||'')+_0x4aaa06(0x207);const _0x2da576=[{'key':_0x4aaa06(0xb4),'label':'Karbo'},{'key':_0x4aaa06(0x16c),'label':_0x4aaa06(0x111)},{'key':_0x4aaa06(0x1d3),'label':_0x4aaa06(0x15d)},{'key':'makananLauk','label':'Protein'},{'key':'makananAir','label':_0x4aaa06(0x1c2)}];let _0x13c6f5=_0x4aaa06(0x8e);_0x2da576[_0x4aaa06(0x198)](_0x270987=>{const _0x312b80=_0x4aaa06;_0x13c6f5+=_0x312b80(0x156)+_0x270987[_0x312b80(0x170)]+'\x22\x20'+(_0x47f89a[_0x270987[_0x312b80(0x170)]]?_0x312b80(0x88):'')+_0x312b80(0x142)+_0x270987[_0x312b80(0x170)]+'\x22>'+_0x270987[_0x312b80(0x1b9)]+_0x312b80(0x1a6);}),_0x13c6f5+=_0x4aaa06(0x148),_0x18bf84[_0x4aaa06(0x1c8)]+=_0x13c6f5,document[_0x4aaa06(0xa5)](_0x4aaa06(0x21a))[_0x4aaa06(0x11f)][_0x4aaa06(0xed)](_0x4aaa06(0x1a2));}catch(_0x4e50b3){console[_0x4aaa06(0x8d)](_0x4aaa06(0x1dc),_0x4e50b3),showMessage(_0x4aaa06(0xc6),_0x4aaa06(0x1fa));}}function createChecklistGroup(_0x1a3100,_0xf0be9e,_0x1e36b0,_0x4c87df){const _0x299342=_0x513675,_0x30d5e0=_0x4c87df?_0x4c87df[_0x299342(0x1b3)](',')[_0x299342(0x16d)](_0x4b4ec3=>_0x4b4ec3['trim']()):[];let _0x29a90a=_0x30d5e0['find'](_0x2423ba=>!_0x1e36b0[_0x299342(0x158)](_0x2423ba))||'',_0x28e19=_0x299342(0x20f)+_0xf0be9e+'</label><div\x20class=\x22checklist-container\x22>';return _0x1e36b0[_0x299342(0x198)]((_0x523381,_0x2701d6)=>{const _0x1062c9=_0x299342;_0x28e19+=_0x1062c9(0x167)+_0x1a3100+'-'+_0x2701d6+'\x22\x20name=\x22edit-'+_0x1a3100+'\x22\x20value=\x22'+_0x523381+'\x22\x20'+(_0x30d5e0['includes'](_0x523381)?_0x1062c9(0x88):'')+_0x1062c9(0xb1)+_0x1a3100+'-'+_0x2701d6+'\x22>'+_0x523381+_0x1062c9(0x1da);}),_0x28e19+='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22checklist-option\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22checkbox\x22\x20id=\x22edit-'+_0x1a3100+_0x299342(0x83)+_0x1a3100+_0x299342(0x10c)+(_0x29a90a?_0x299342(0x88):'')+_0x299342(0x1ce)+_0x1a3100+_0x299342(0x145)+_0x1a3100+_0x299342(0x17b),_0x28e19+=_0x299342(0x1ba)+_0x1a3100+_0x299342(0xcc)+_0x29a90a+'\x22\x20style=\x22display:\x20'+(_0x29a90a?_0x299342(0x127):_0x299342(0x11c))+_0x299342(0x1c3),_0x28e19;}function toggleLainnyaInput(_0x12c815,_0x4d89e5){const _0x47ac14=_0x513675;document[_0x47ac14(0xa5)](_0x4d89e5)['style'][_0x47ac14(0xc1)]=_0x12c815[_0x47ac14(0x88)]?_0x47ac14(0x127):_0x47ac14(0x11c);}function getChecklistDataFromModal(_0xf4641d,_0x3d181d){const _0x3ccf26=_0x513675,_0x59153d=[];document[_0x3ccf26(0xd0)]('input[name=\x22'+_0xf4641d+_0x3ccf26(0x1e8))[_0x3ccf26(0x198)](_0x3caac7=>{const _0x19f8d9=_0x3ccf26;if(_0x3caac7[_0x19f8d9(0x131)]!==_0x19f8d9(0x216))_0x59153d[_0x19f8d9(0x159)](_0x3caac7[_0x19f8d9(0x131)]);});const _0x47c44b=document['getElementById'](_0x3d181d)[_0x3ccf26(0x131)][_0x3ccf26(0x85)]();return document['getElementById'](_0xf4641d+'-lainnyaCheck')['checked']&&_0x47c44b&&_0x59153d[_0x3ccf26(0x159)](_0x47c44b),_0x59153d[_0x3ccf26(0xb7)](',\x20');}async function saveChanges(){const _0xa8e212=_0x513675,_0x487996=document[_0xa8e212(0xa5)]('editDocId')[_0xa8e212(0x131)];if(!_0x487996)return;const _0x1afbf5={'tanggalKegiatan':document['getElementById'](_0xa8e212(0x1cf))[_0xa8e212(0x131)],'bangunPagi':document['getElementById']('edit-bangunPagi')[_0xa8e212(0x131)],'tidurCepat':document[_0xa8e212(0xa5)](_0xa8e212(0xa9))[_0xa8e212(0x131)],'rincianOlahraga':getChecklistDataFromModal(_0xa8e212(0x1db),'edit-rincianOlahraga-lainnyaText'),'kegiatanMasyarakat':getChecklistDataFromModal(_0xa8e212(0x1e1),'edit-kegiatanMasyarakat-lainnyaText'),'tempatBelajar':document[_0xa8e212(0xa5)](_0xa8e212(0x144))['value'],'materiBelajar':document[_0xa8e212(0xa5)](_0xa8e212(0x12a))[_0xa8e212(0x131)],'makananKarbo':document[_0xa8e212(0xa5)](_0xa8e212(0xe7))[_0xa8e212(0x88)],'makananSayur':document[_0xa8e212(0xa5)](_0xa8e212(0xbf))[_0xa8e212(0x88)],'makananSusu':document[_0xa8e212(0xa5)]('edit-makananSusu')[_0xa8e212(0x88)],'makananLauk':document[_0xa8e212(0xa5)](_0xa8e212(0xab))[_0xa8e212(0x88)],'makananAir':document['getElementById']('edit-makananAir')[_0xa8e212(0x88)]};for(let _0x205699=0x1;_0x205699<=0x7;_0x205699++){if(ibadahSettings[_0x205699-0x1]===!![]){const _0x52ba59=document[_0xa8e212(0xa5)](_0xa8e212(0x190)+_0x205699);_0x52ba59&&(_0x1afbf5[_0xa8e212(0x189)+_0x205699]=_0x52ba59[_0xa8e212(0x131)]);}}try{await db[_0xa8e212(0xe6)]('laporan')[_0xa8e212(0x137)](_0x487996)[_0xa8e212(0x1cc)](_0x1afbf5),showMessage(_0xa8e212(0x17f),_0xa8e212(0x183),()=>{const _0x48f7bc=_0xa8e212;closeModal(_0x48f7bc(0x21a)),loadDashboard();});}catch(_0xe0a17f){showMessage(_0xa8e212(0xd4)+_0xe0a17f[_0xa8e212(0x116)],_0xa8e212(0x1fa));}}function deleteData(_0xe299c1){const _0x2e3c92=_0x513675,_0x207eb8=async()=>{const _0x5db6b0=_0x7d64;try{await db['collection'](_0x5db6b0(0xaa))[_0x5db6b0(0x137)](_0xe299c1)['delete'](),showMessage(_0x5db6b0(0x1e4),'Sukses',()=>{loadDashboard();});}catch(_0x444939){showMessage(_0x5db6b0(0x19a)+_0x444939[_0x5db6b0(0x116)],_0x5db6b0(0x1fa));}};showConfirmationModal(_0x2e3c92(0x1ea),_0x2e3c92(0x1e7),_0x207eb8);}function showConfirmationModal(_0x2d5d1b,_0x50818a,_0x4270fe){const _0x1b1c74=_0x513675;document[_0x1b1c74(0xa5)](_0x1b1c74(0x186))[_0x1b1c74(0x1be)]=_0x50818a,document[_0x1b1c74(0xa5)]('messageModalText')['textContent']=_0x2d5d1b;const _0x5e6719=document[_0x1b1c74(0xa5)]('messageModalButtons');_0x5e6719[_0x1b1c74(0x1c8)]='';const _0xfd360c=document['createElement'](_0x1b1c74(0x18c));_0xfd360c[_0x1b1c74(0x109)]='action-btn\x20delete',_0xfd360c['innerHTML']='<i\x20class=\x22fas\x20fa-check\x22></i>\x20Ya,\x20Hapus',_0xfd360c[_0x1b1c74(0xd8)]=function(){closeModal('messageModal');if(_0x4270fe)_0x4270fe();};const _0x3ea4c2=document['createElement'](_0x1b1c74(0x18c));_0x3ea4c2['className']=_0x1b1c74(0x187),_0x3ea4c2[_0x1b1c74(0x1c8)]=_0x1b1c74(0x7e),_0x3ea4c2['style'][_0x1b1c74(0x199)]='10px',_0x3ea4c2[_0x1b1c74(0xd8)]=function(){const _0x1357a7=_0x1b1c74;closeModal(_0x1357a7(0x1e2));},_0x5e6719['appendChild'](_0x3ea4c2),_0x5e6719[_0x1b1c74(0x102)](_0xfd360c),document[_0x1b1c74(0xa5)]('messageModal')[_0x1b1c74(0x11f)]['add'](_0x1b1c74(0x1a2));}document[_0x513675(0xa5)](_0x513675(0xb0))['addEventListener'](_0x513675(0x206),function(_0x3ca527){const _0x2a1bcc=_0x513675;_0x3ca527[_0x2a1bcc(0x12e)](),sessionStorage[_0x2a1bcc(0x146)](),showMessage(_0x2a1bcc(0x12b),_0x2a1bcc(0x1bb),()=>{const _0x691eff=_0x2a1bcc;window[_0x691eff(0x1b6)][_0x691eff(0x1c0)]();});});function switchMainView(_0x151fd6,_0x458259){const _0x3a7f2d=_0x513675;document[_0x3a7f2d(0xd0)](_0x3a7f2d(0xe8))[_0x3a7f2d(0x198)](_0x56bfc5=>_0x56bfc5[_0x3a7f2d(0x11f)][_0x3a7f2d(0x175)]('active')),_0x458259['classList'][_0x3a7f2d(0xed)]('active'),document[_0x3a7f2d(0xa5)]('laporan-container')['style'][_0x3a7f2d(0xc1)]='none',document[_0x3a7f2d(0xa5)]('adm-container')[_0x3a7f2d(0x1b2)][_0x3a7f2d(0xc1)]=_0x3a7f2d(0x11c),document[_0x3a7f2d(0xa5)](_0x3a7f2d(0x18b))['style'][_0x3a7f2d(0xc1)]=_0x3a7f2d(0x11c);if(_0x151fd6===_0x3a7f2d(0xaa))document[_0x3a7f2d(0xa5)](_0x3a7f2d(0x150))['style'][_0x3a7f2d(0xc1)]='block';else{if(_0x151fd6===_0x3a7f2d(0xa6))document[_0x3a7f2d(0xa5)](_0x3a7f2d(0x1c4))[_0x3a7f2d(0x1b2)][_0x3a7f2d(0xc1)]=_0x3a7f2d(0x127),loadAdmView();else _0x151fd6===_0x3a7f2d(0x16f)&&(document[_0x3a7f2d(0xa5)](_0x3a7f2d(0x18b))[_0x3a7f2d(0x1b2)][_0x3a7f2d(0xc1)]=_0x3a7f2d(0x127),loadSupervisiView());}}function createUploadableInput(_0xce3d6a,_0x41fbb4,_0x2dfc4d,_0x1984d3,_0x8ed91f){const _0x34470c=_0x513675,_0x1c509a=_0x41fbb4[_0x34470c(0xdd)](),_0x4f2471=_0xce3d6a+'-'+_0x1c509a;return'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x20uploadable-input-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label>'+_0x2dfc4d+_0x34470c(0x1f7)+_0x4f2471+_0x34470c(0x96)+_0x4f2471+_0x34470c(0x1e3)+_0x4f2471+_0x34470c(0xcf)+_0x4f2471+_0x34470c(0xff)+_0x4f2471+_0x34470c(0xe0)+_0x4f2471+_0x34470c(0xa4)+(_0x8ed91f||'')+_0x34470c(0x90)+_0x1984d3+'\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22container-'+_0x4f2471+_0x34470c(0x10e)+_0x4f2471+_0x34470c(0x14c)+_0x4f2471+'\x27)\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22fas\x20fa-cloud-upload-alt\x22></i>\x20Upload\x20File\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22status-'+_0x4f2471+_0x34470c(0x19c);}function _0x7d64(_0x1fbbb2,_0x281d5f){const _0x246093=_0x2460();return _0x7d64=function(_0x7d64cd,_0x18c042){_0x7d64cd=_0x7d64cd-0x7a;let _0xa6ccf9=_0x246093[_0x7d64cd];return _0xa6ccf9;},_0x7d64(_0x1fbbb2,_0x281d5f);}function switchInputType(_0xec88f6,_0x1dc250,_0x43214f){const _0x4db5b2=_0x513675;document['querySelectorAll'](_0x4db5b2(0x8f)+_0xec88f6+'\x22]')[_0x4db5b2(0x198)](_0xd47045=>_0xd47045[_0x4db5b2(0x11f)]['remove'](_0x4db5b2(0x180))),_0x43214f['classList']['add'](_0x4db5b2(0x180));const _0x585521=document[_0x4db5b2(0xa5)](_0x4db5b2(0x13b)+_0xec88f6+'-link'),_0x803d33=document[_0x4db5b2(0xa5)]('container-'+_0xec88f6+'-upload');_0x1dc250===_0x4db5b2(0x1e9)?(_0x585521[_0x4db5b2(0x1b2)][_0x4db5b2(0xc1)]=_0x4db5b2(0x127),_0x803d33[_0x4db5b2(0x1b2)][_0x4db5b2(0xc1)]=_0x4db5b2(0x11c)):(_0x585521[_0x4db5b2(0x1b2)]['display']=_0x4db5b2(0x11c),_0x803d33[_0x4db5b2(0x1b2)]['display']=_0x4db5b2(0x127));}async function uploadFileToDrive(_0x3c1c84){const _0x544de6=_0x513675,_0x574f56=_0x544de6(0x87);if(_0x574f56==='GANTI_DENGAN_URL_WEB_APP_ANDA'){showMessage(_0x544de6(0xc7),'Konfigurasi\x20Diperlukan');return;}const _0x120c90=document[_0x544de6(0xa5)](_0x544de6(0xd9)+_0x3c1c84),_0xe7e114=document[_0x544de6(0xa5)](_0x544de6(0xcd)+_0x3c1c84),_0x1e5140=document[_0x544de6(0xa5)](_0x544de6(0x182)+_0x3c1c84);if(_0x120c90['files'][_0x544de6(0xae)]===0x0){showMessage('Silakan\x20pilih\x20file\x20untuk\x20diunggah\x20terlebih\x20dahulu.',_0x544de6(0x176));return;}const _0x45e521=_0x120c90[_0x544de6(0x179)][0x0];_0xe7e114['innerHTML']=_0x544de6(0x1ca);const _0x4d325b=new FileReader();_0x4d325b[_0x544de6(0x9f)]=async _0x36b9a1=>{const _0x3a1d71=_0x544de6,_0x141d28=_0x36b9a1['target'][_0x3a1d71(0xaf)][_0x3a1d71(0x1b3)](',')[0x1],_0x27b48d={'fileName':_0x45e521[_0x3a1d71(0x14d)],'mimeType':_0x45e521['type'],'fileData':_0x141d28};try{const _0x981a95=await fetch(_0x574f56,{'method':_0x3a1d71(0x152),'body':JSON[_0x3a1d71(0x128)](_0x27b48d)});if(!_0x981a95['ok'])throw new Error('Server\x20error:\x20'+_0x981a95['statusText']);const _0x4fbdfd=await _0x981a95[_0x3a1d71(0x174)]();if(_0x4fbdfd['status']==='success')_0x1e5140['value']=_0x4fbdfd[_0x3a1d71(0x94)],_0xe7e114[_0x3a1d71(0x1c8)]=_0x3a1d71(0x1aa),showMessage(_0x3a1d71(0x153),_0x3a1d71(0x183));else throw new Error(_0x4fbdfd[_0x3a1d71(0x116)]||_0x3a1d71(0x209));}catch(_0x36441e){console[_0x3a1d71(0x8d)](_0x3a1d71(0x168),_0x36441e),_0xe7e114[_0x3a1d71(0x1c8)]=_0x3a1d71(0xf6)+_0x36441e[_0x3a1d71(0x116)],showMessage('Gagal\x20mengunggah\x20file:\x20'+_0x36441e[_0x3a1d71(0x116)],_0x3a1d71(0x1fa));}},_0x4d325b[_0x544de6(0x1fb)]=_0x3fefc0=>{const _0x5d0ac1=_0x544de6;console[_0x5d0ac1(0x8d)]('File\x20reading\x20error:',_0x3fefc0),_0xe7e114['innerHTML']=_0x5d0ac1(0x181),showMessage(_0x5d0ac1(0x1f8),_0x5d0ac1(0x1fa));},_0x4d325b[_0x544de6(0x126)](_0x45e521);}async function loadAdmView(){const _0x56ac21=_0x513675,_0x19c22b=document[_0x56ac21(0xa5)](_0x56ac21(0x9e));_0x19c22b['innerHTML']='<div\x20class=\x22loader-container\x22><div\x20class=\x22loader\x22></div></div>';const _0x565dd0=sessionStorage[_0x56ac21(0xca)](_0x56ac21(0x185));if(!_0x565dd0){_0x19c22b['innerHTML']=_0x56ac21(0x10b);return;}try{const _0x562afa=await db['collection'](_0x56ac21(0x18e))['doc'](_0x56ac21(0x138))[_0x56ac21(0x10d)]();if(!_0x562afa[_0x56ac21(0x14a)])throw new Error(_0x56ac21(0x20b));const _0x56e94f=_0x562afa[_0x56ac21(0x1f3)](),_0x4bb119=_0x56e94f['supervisiSettings']||{'administrasi':[]},_0xe7e51=_0x4bb119[_0x56ac21(0x151)]||[],_0xc709b2=_0xe7e51[_0x56ac21(0xde)](_0x491a9f=>_0x491a9f&&_0x491a9f[_0x56ac21(0x1f4)]===!![]),_0x148356=db['collection'](_0x56ac21(0x149))[_0x56ac21(0x137)](_0x565dd0),_0xf5a191=await _0x148356[_0x56ac21(0x10d)](),_0x120f49=_0xf5a191[_0x56ac21(0x14a)]?_0xf5a191[_0x56ac21(0x1f3)]():{};let _0x2edce9='';_0xc709b2['length']===0x0?_0x2edce9=_0x56ac21(0x1c1):_0xc709b2[_0x56ac21(0x198)](_0x56f9e3=>{const _0x4f267a=_0x56ac21,_0x3d5414=_0x120f49[_0x56f9e3['id']]||{},_0x31437f=_0x3d5414['url']||'',_0x2841b7=_0x3d5414[_0x4f267a(0x1c6)]||'Belum\x20Diperiksa',_0x11d69f=_0x3d5414[_0x4f267a(0x121)]||_0x4f267a(0x7d);let _0x43cb8e='status-diperiksa';if(_0x2841b7==='Revisi')_0x43cb8e=_0x4f267a(0x211);else{if(_0x2841b7===_0x4f267a(0x1a8))_0x43cb8e=_0x4f267a(0x1eb);}_0x2edce9+=_0x4f267a(0xfc)+_0x56f9e3[_0x4f267a(0x193)]+_0x4f267a(0x104)+_0x43cb8e+'\x22>'+_0x2841b7+_0x4f267a(0x115)+createUploadableInput(_0x56f9e3['id'],_0x4f267a(0x110),_0x4f267a(0x14b),_0x4f267a(0x14e),_0x31437f)+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22btn\x22\x20style=\x22margin-top:\x2015px;\x22\x20onclick=\x22saveSingleAdm(\x27'+_0x56f9e3['id']+_0x4f267a(0x14f)+_0x11d69f+'</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20';});_0x19c22b[_0x56ac21(0x1c8)]=_0x2edce9;const _0x32cd8a=_0x19c22b[_0x56ac21(0xd0)](_0x56ac21(0x184));_0x32cd8a[_0x56ac21(0x198)]((_0x11cf16,_0x3a28fc)=>{const _0x591ea1=_0x56ac21;_0x11cf16[_0x591ea1(0x1b2)][_0x591ea1(0xf5)]=_0x3a28fc*0x64+'ms';});}catch(_0x4aa3f3){console[_0x56ac21(0x8d)](_0x56ac21(0xf2),_0x4aa3f3),_0x19c22b[_0x56ac21(0x1c8)]='<p\x20style=\x22color:red;\x22>Gagal\x20memuat\x20data\x20administrasi:\x20'+_0x4aa3f3['message']+_0x56ac21(0x15c);}}async function saveSingleAdm(_0x51444d){const _0x2c197d=_0x513675,_0x2d94bf=sessionStorage[_0x2c197d(0xca)](_0x2c197d(0x185)),_0x75a53=document[_0x2c197d(0xa5)](_0x2c197d(0x182)+_0x51444d+_0x2c197d(0x95));if(!_0x2d94bf||!_0x75a53){console['error']('Elemen\x20NIP\x20atau\x20URL\x20tidak\x20ditemukan.');return;}const _0x2e1916=_0x75a53['value'],_0x45ad64=db[_0x2c197d(0xe6)](_0x2c197d(0x149))[_0x2c197d(0x137)](_0x2d94bf);try{await _0x45ad64[_0x2c197d(0xdc)]({'nip':_0x2d94bf,'namaGuru':sessionStorage['getItem'](_0x2c197d(0xe1)),[_0x51444d]:{'id':_0x51444d,'url':_0x2e1916,'status':_0x2c197d(0x15b),'komentar':''}},{'merge':!![]}),showMessage(_0x2c197d(0x217),_0x2c197d(0x183)),loadAdmView();}catch(_0x537af7){console['error'](_0x2c197d(0xad),_0x537af7),showMessage(_0x2c197d(0x1d7),'Error');}}async function loadSupervisiView(){const _0x33c62d=_0x513675,_0x281ce7=document[_0x33c62d(0xa5)]('supervisi-list-container');_0x281ce7[_0x33c62d(0x1c8)]='<div\x20class=\x22loader-container\x22><div\x20class=\x22loader\x22></div></div>';const _0x53b63b=sessionStorage[_0x33c62d(0xca)](_0x33c62d(0x185));try{const _0x2f7482=await db[_0x33c62d(0xe6)]('pengaturan')[_0x33c62d(0x137)](_0x33c62d(0x138))[_0x33c62d(0x10d)]();if(!_0x2f7482[_0x33c62d(0x14a)])throw new Error(_0x33c62d(0x20b));const _0x259519=_0x2f7482[_0x33c62d(0x1f3)](),_0x2a3368=_0x259519[_0x33c62d(0x147)]||{'kegiatan':[]},_0x474b8a=_0x2a3368[_0x33c62d(0xc0)]||[],_0x4c9a5a=_0x474b8a[_0x33c62d(0xde)](_0x3fd9aa=>_0x3fd9aa&&_0x3fd9aa[_0x33c62d(0x1f4)]===!![]);if(_0x4c9a5a[_0x33c62d(0xae)]===0x0){_0x281ce7[_0x33c62d(0x1c8)]=_0x33c62d(0xfa);return;}const _0x1a8952=db[_0x33c62d(0xe6)](_0x33c62d(0x1b7))[_0x33c62d(0x137)](_0x53b63b),_0x546161=await _0x1a8952[_0x33c62d(0x10d)](),_0x1b83fa=_0x546161[_0x33c62d(0x14a)]?_0x546161[_0x33c62d(0x1f3)]():{};let _0x985d72='';_0x4c9a5a[_0x33c62d(0x198)](_0x51dd6f=>{const _0x1af330=_0x33c62d,_0x14e0e4=_0x1b83fa[_0x51dd6f['id']]||{},_0x4324fa=_0x14e0e4[_0x1af330(0x215)]||_0x1af330(0xe5),_0x1671c0=_0x14e0e4[_0x1af330(0x1b4)]||'',_0x424f44=_0x14e0e4['urlFoto']||'';_0x985d72+=_0x1af330(0x15f)+_0x51dd6f[_0x1af330(0x193)]+_0x1af330(0x143)+_0x51dd6f['id']+'\x27)\x22><i\x20class=\x22fas\x20fa-save\x22></i>\x20Simpan\x20Perubahan</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22supervisi-card-body\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22supervisi-col\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h4><i\x20class=\x22fas\x20fa-upload\x22></i>\x20Laporan\x20Anda</h4>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22'+_0x51dd6f['id']+'-tanggal\x22>Tanggal\x20Pelaksanaan</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22date\x22\x20id=\x22'+_0x51dd6f['id']+_0x1af330(0x1f5)+(_0x14e0e4[_0x1af330(0x165)]||'')+_0x1af330(0x203)+createUploadableInput(_0x51dd6f['id'],_0x1af330(0x110),_0x1af330(0x188),_0x1af330(0x14e),_0x1671c0)+_0x1af330(0x200)+createUploadableInput(_0x51dd6f['id'],_0x1af330(0x106),_0x1af330(0xf8),'https://photos.google.com/...',_0x424f44)+_0x1af330(0x210)+_0x4324fa+_0x1af330(0x118)+(_0x14e0e4[_0x1af330(0x121)]||_0x1af330(0x7d))+_0x1af330(0x1cb);}),_0x281ce7['innerHTML']=_0x985d72;}catch(_0x2d7337){console[_0x33c62d(0x8d)](_0x33c62d(0x12c),_0x2d7337),_0x281ce7[_0x33c62d(0x1c8)]=_0x33c62d(0x81)+_0x2d7337['message']+_0x33c62d(0x15c);}}async function saveGuruSupervisiChanges(_0x16dde9){const _0x59c34d=_0x513675,_0x20eb81=sessionStorage[_0x59c34d(0xca)](_0x59c34d(0x185));if(!_0x20eb81){showMessage('Gagal\x20menyimpan,\x20NIP\x20guru\x20tidak\x20ditemukan.',_0x59c34d(0x1fa));return;}const _0x2b3754=document[_0x59c34d(0xa5)](_0x59c34d(0x182)+_0x16dde9+_0x59c34d(0x95))['value'],_0x1b1156=document['getElementById'](_0x59c34d(0x182)+_0x16dde9+_0x59c34d(0xa3))['value'],_0x2ad752=document[_0x59c34d(0xa5)](_0x16dde9+_0x59c34d(0xdb))['value'],_0x15fbeb=db['collection'](_0x59c34d(0x1b7))[_0x59c34d(0x137)](_0x20eb81);try{await _0x15fbeb[_0x59c34d(0xdc)]({[_0x16dde9]:{'urlDokumen':_0x2b3754,'urlFoto':_0x1b1156,'tanggal':_0x2ad752,'id':_0x16dde9}},{'merge':!![]}),showMessage(_0x59c34d(0xc4),_0x59c34d(0x183));}catch(_0x1d8add){showMessage('Gagal\x20memperbarui:\x20'+_0x1d8add[_0x59c34d(0x116)],_0x59c34d(0x1fa)),console[_0x59c34d(0x8d)](_0x59c34d(0xce),_0x1d8add);}}
+    </script>
+</body>
+</html>
+

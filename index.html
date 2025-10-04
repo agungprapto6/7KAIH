@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KELAS VIA</title>
+    <link rel="icon" type="image/x-icon" href="https://lh3.googleusercontent.com/d/18YYrlB-Q6S_dZos3BLnoNhWk8MCuBiNd">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 1. Tambahkan CSS Swiper.js -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .hero-bg, .parallax-bg { 
+            background-size: cover; 
+            background-position: center; 
+        }
+        .parallax-bg {
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+        .float-anim { animation: float 6s ease-in-out infinite; }
+        @keyframes float {
+            0% { transform: translatey(0px); }
+            50% { transform: translatey(-20px); }
+            100% { transform: translatey(0px); }
+        }
+        .scroll-reveal { visibility: hidden; }
+        .max-h-screen-80 { max-height: 80vh; }
+        #announcement-modal-text {
+            white-space: pre-wrap;
+        }
+        .carousel-item {
+            display: none;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .carousel-item.active {
+            display: block;
+        }
+        .animated-nav-link {
+            position: relative;
+            padding-bottom: 0.25rem;
+        }
+        .animated-nav-link::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background-color: #4F46E5;
+            transition: width 0.3s ease-in-out;
+        }
+        .animated-nav-link:hover::after, .animated-nav-link.active::after {
+            width: 100%;
+        }
+        /* Style untuk Swiper Carousel */
+        .swiper-pagination-bullet-active {
+            background-color: #4F46E5 !important;
+        }
+        .swiper-slide {
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: stretch; /* Membuat slide memiliki tinggi yang sama */
+        }
+        .student-card {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header / Navigasi -->
+    <header id="header" class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 shadow-sm">
+        <div class="container mx-auto px-6">
+            <div class="py-4 flex justify-between items-center">
+                <a href="#" class="flex items-center gap-3">
+                    <img id="school-logo-nav" src="https://placehold.co/40x40/4F46E5/FFFFFF?text=L" alt="Logo Sekolah" class="h-10 w-10 object-contain">
+                    <span id="school-name-nav" class="text-xl font-bold text-indigo-700">Nama Sekolah</span>
+                </a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="animated-nav-link text-gray-600 hover:text-indigo-600 font-medium transition">About</a>
+                    <a href="#berita" class="animated-nav-link text-gray-600 hover:text-indigo-600 font-medium transition">News</a>
+                    <a href="#video-gallery" class="animated-nav-link text-gray-600 hover:text-indigo-600 font-medium transition">Video</a>
+                    <a href="#grafik-7kaih" class="animated-nav-link text-gray-600 hover:text-indigo-600 font-medium transition">7KAIH</a>
+                    <a href="#siswa" class="animated-nav-link text-gray-600 hover:text-indigo-600 font-medium transition">Siswa</a>
+                    <a href="#galeri" class="animated-nav-link text-gray-600 hover:text-indigo-600 font-medium transition">Galeri</a>
+                    <a href="#pesan" class="animated-nav-link text-gray-600 hover:text-indigo-600 font-medium transition">Pesan</a>
+                    <div class="relative group">
+                        <button class="animated-nav-link text-gray-600 hover:text-indigo-600 font-medium transition flex items-center gap-1">
+                            Laporan <i class="fas fa-chevron-down text-xs transition-transform duration-200 group-hover:rotate-180"></i>
+                        </button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10">
+                            <div class="bg-white shadow-lg rounded-md py-1 w-40">
+                                <a href="Data7.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">7KAIH</a>
+                                <a href="Supervisi.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">Supervisi</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white py-4">
+            <a href="#about" class="block text-center py-2 px-4 text-gray-600 hover:bg-indigo-50">About</a>
+            <a href="#berita" class="block text-center py-2 px-4 text-gray-600 hover:bg-indigo-50">News</a>
+            <a href="#video-gallery" class="block text-center py-2 px-4 text-gray-600 hover:bg-indigo-50">Video</a>
+            <a href="#grafik-7kaih" class="block text-center py-2 px-4 text-gray-600 hover:bg-indigo-50">7KAIH</a>
+            <a href="#siswa" class="block text-center py-2 px-4 text-gray-600 hover:bg-indigo-50">Siswa</a>
+            <a href="#galeri" class="block text-center py-2 px-4 text-gray-600 hover:bg-indigo-50">Galeri</a>
+            <a href="#pesan" class="block text-center py-2 px-4 text-gray-600 hover:bg-indigo-50">Pesan</a>
+            <div>
+                <button id="mobile-laporan-button" class="w-full text-center py-2 px-4 text-gray-600 hover:bg-indigo-50 flex items-center justify-center gap-2">
+                    Laporan <i id="mobile-chevron" class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="mobile-laporan-dropdown" class="hidden bg-gray-50">
+                    <a href="Data7.html" class="block text-center py-2 px-4 text-gray-600 hover:bg-indigo-100">7KAIH</a>
+                    <a href="Supervisi.html" class="block text-center py-2 px-4 text-gray-600 hover:bg-indigo-100">Supervisi</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <!-- Hero Section -->
+        <section id="home" class="hero-bg min-h-screen flex items-center pt-24 md:pt-0 relative overflow-hidden -mt-20">
+             <div class="absolute inset-0 bg-indigo-900/50"></div>
+            <div class="container mx-auto px-6 text-center relative z-10">
+                <h1 id="school-name-hero" class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4 scroll-reveal">Selamat Datang di Kelas VI-A <br> <span class="text-yellow-300">Nama Sekolah</span></h1>
+                <p id="hero-vision" class="text-lg md:text-xl text-indigo-200 max-w-3xl mx-auto mb-8 scroll-reveal">Mencetak Generasi Cerdas, Kreatif, dan Berakhlak Mulia.</p>
+				<div class="flex flex-wrap justify-center items-center gap-2 md:gap-4 pb-4 pt-3">
+					<a href="Admin.html" class="text-sm font-semibold text-white bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg shadow-md transition-transform transform hover:scale-105">
+						<i class="fas fa-chalkboard-teacher mr-2"></i>Guru
+					</a>
+					<a href="Kepsek.html" class="text-sm font-semibold text-white bg-red-500 hover:bg-blue-600 px-4 py-2 rounded-lg shadow-md transition-transform transform hover:scale-105">
+						<i class="fas fa-user-tie mr-2"></i>Kepsek
+					</a>					
+					<a href="Siswa.html" class="text-sm font-semibold text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg shadow-md transition-transform transform hover:scale-105">
+						<i class="fas fa-user-graduate mr-2"></i>Siswa
+					</a>
+				</div>
+            </div>
+        </section>
+
+        <!-- Tentang Kami -->
+        <section id="about" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-indigo-700 scroll-reveal">Tentang VIA</h2>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-16 scroll-reveal">
+                    <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                        <img id="foto-sambutan" src="https://placehold.co/200x200/E0E7FF/3730A3?text=Guru" alt="Foto Sambutan" class="w-48 h-48 rounded-full object-cover shadow-md border-4 border-indigo-200">
+                        <div class="text-center md:text-left">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Sambutan Guru Kelas VI-A</h3>
+                            <p id="nama-sambutan" class="text-indigo-600 font-semibold mb-4">Memuat nama...</p>
+                            <p id="teks-sambutan" class="text-gray-600 leading-relaxed">Memuat sambutan...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center">
+                    <div class="w-full lg:w-3/4">
+                        <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10 scroll-reveal flex flex-col items-center text-center group hover:shadow-2xl transition-shadow duration-300">
+                            <div class="bg-indigo-100 text-indigo-600 rounded-full p-5 mb-6 transition-transform duration-300 group-hover:scale-110">
+                                <i class="fas fa-route fa-3x"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-indigo-700 mb-4">Visi, Misi & Tujuan</h3>
+                            <p id="visi-sekolah-summary" class="text-gray-600 mb-8 flex-grow max-w-2xl">Menjadi lembaga pendidikan terdepan...</p>
+                            <button onclick="openModal('visiMisiModal')" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-300 transform group-hover:-translate-y-1">
+                                <i class="fas fa-book-open-reader mr-2"></i>Baca Selengkapnya
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Info Kelas Section -->
+        <section id="info-kelas" class="py-20 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-indigo-700 scroll-reveal">Informasi Kelas</h2>
+                    <p class="text-gray-600 mt-2 scroll-reveal">Jadwal, struktur, dan kesepakatan belajar di kelas kami.</p>
+                </div>
+                <div id="info-kelas-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Item 1: Jadwal Pelajaran -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6 text-center transform hover:-translate-y-2 transition-transform duration-300 scroll-reveal">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Jadwal Pelajaran</h3>
+                        <div class="cursor-pointer group overflow-hidden rounded-lg shadow-md aspect-w-3 aspect-h-4">
+                            <img id="img-jadwal-pelajaran" src="https://placehold.co/300x400/F3F4F6/AAAAAA?text=Memuat..." alt="Jadwal Pelajaran" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300" onclick="openImageModal(this.src)">
+                        </div>
+                    </div>
+                    <!-- Item 2: Jadwal Piket -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6 text-center transform hover:-translate-y-2 transition-transform duration-300 scroll-reveal">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Jadwal Piket</h3>
+                        <div class="cursor-pointer group overflow-hidden rounded-lg shadow-md aspect-w-3 aspect-h-4">
+                            <img id="img-jadwal-piket" src="https://placehold.co/300x400/F3F4F6/AAAAAA?text=Memuat..." alt="Jadwal Piket" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300" onclick="openImageModal(this.src)">
+                        </div>
+                    </div>
+                    <!-- Item 3: Struktur Organisasi -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6 text-center transform hover:-translate-y-2 transition-transform duration-300 scroll-reveal">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Struktur Organisasi</h3>
+                        <div class="cursor-pointer group overflow-hidden rounded-lg shadow-md aspect-w-3 aspect-h-4">
+                            <img id="img-struktur-organisasi" src="https://placehold.co/300x400/F3F4F6/AAAAAA?text=Memuat..." alt="Struktur Organisasi" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300" onclick="openImageModal(this.src)">
+                        </div>
+                    </div>
+                    <!-- Item 4: Kesepakatan Kelas -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6 text-center transform hover:-translate-y-2 transition-transform duration-300 scroll-reveal">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Kesepakatan Kelas</h3>
+                        <div class="cursor-pointer group overflow-hidden rounded-lg shadow-md aspect-w-3 aspect-h-4">
+                            <img id="img-kesepakatan-kelas" src="https://placehold.co/300x400/F3F4F6/AAAAAA?text=Belum+Diatur" alt="Kesepakatan Kelas" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300" onclick="openImageModal(this.src)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pengumuman / Berita Terbaru -->
+        <section id="berita" class="py-20 relative overflow-hidden">
+            <div id="berita-bg-overlay" class="absolute inset-0 bg-indigo-900/80 hidden"></div>
+            <div class="container mx-auto px-6 relative">
+                <div class="text-center mb-16">
+                    <h2 id="berita-title" class="text-4xl font-bold text-indigo-700 scroll-reveal">Pengumuman Terbaru</h2>
+                    <p id="berita-subtitle" class="text-gray-600 mt-2 scroll-reveal">Informasi dan kegiatan terkini seputar sekolah.</p>
+                </div>
+                <div id="announcements-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                     <p class="col-span-full text-center text-gray-500">Memuat pengumuman...</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Video Gallery Section -->
+        <section id="video-gallery" class="py-20 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-indigo-700 scroll-reveal">Video Pembelajaran</h2>
+                    <p class="text-gray-600 mt-2 scroll-reveal">Tonton video-video menarik dari kelas kami.</p>
+                </div>
+                <!-- Bagian ini sudah dinamis, akan menampilkan video sesuai data di Firebase -->
+                <div id="youtube-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <p class="col-span-full text-center text-gray-500">Memuat video...</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Grafik 7KAIH -->
+        <section id="grafik-7kaih" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-indigo-700 scroll-reveal">Statistik Pembiasaan 7KAIH</h2>
+                    <p class="text-gray-600 mt-2 scroll-reveal">Grafik rekapitulasi pembiasaan siswa secara keseluruhan.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 scroll-reveal">
+                    <div class="relative h-[40vh] md:h-[60vh] w-full">
+                        <canvas id="kaihChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Siswa -->
+        <section id="siswa" class="py-20 relative overflow-hidden">
+             <div id="siswa-bg-overlay" class="absolute inset-0 bg-indigo-900/80 hidden"></div>
+            <div class="container mx-auto px-6 relative">
+                 <div class="text-center mb-16">
+                    <h2 id="siswa-title" class="text-4xl font-bold text-indigo-700 scroll-reveal">Peserta Didik Kami</h2>
+                    <p id="siswa-subtitle" class="text-gray-600 mt-2 scroll-reveal">Generasi penerus yang cerdas dan berkarakter.</p>
+                </div>
+                <div class="swiper siswa-swiper w-full pb-12">
+                    <div id="siswa-swiper-wrapper" class="swiper-wrapper">
+                        <!-- Kartu siswa akan dimasukkan di sini oleh JavaScript -->
+                        <div class="swiper-slide">
+                           <p class="col-span-full text-center text-gray-500">Memuat data siswa...</p>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Galeri -->
+        <section id="galeri" class="py-20 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-indigo-700 scroll-reveal">Galeri Kegiatan</h2>
+                    <p class="text-gray-600 mt-2 scroll-reveal">Momen-momen berharga dari kegiatan sekolah kami.</p>
+                </div>
+                <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-10 gap-4">
+                     <p class="col-span-full text-center text-gray-500">Memuat galeri...</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Saran & Pesan -->
+        <section id="pesan" class="py-20 relative bg-gradient-to-br from-indigo-700 to-indigo-900 text-white overflow-hidden">
+            <div class="absolute top-0 left-0 w-64 h-64 bg-indigo-500/20 rounded-full filter blur-3xl opacity-50 animate-pulse"></div>
+            <div class="absolute bottom-0 right-0 w-72 h-72 bg-purple-500/20 rounded-full filter blur-3xl opacity-50 animate-pulse animation-delay-4000"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold scroll-reveal">Saran & Pesan Pengunjung</h2>
+                    <p class="text-indigo-200 mt-2 scroll-reveal">Apa kata mereka tentang sekolah kami.</p>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-16 items-start">
+                    <!-- Grid 1: Form -->
+                    <div class="bg-white/5 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-white/10 scroll-reveal">
+                        <h3 class="text-2xl font-bold mb-6 text-white flex items-center gap-3"><i class="fas fa-pen-to-square"></i> Tinggalkan Pesan Anda</h3>
+                        <form id="pesanForm">
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="nama" class="block text-sm font-medium text-indigo-200">Nama</label>
+                                    <input type="text" id="nama" name="nama" required placeholder="Nama lengkap Anda" class="mt-1 block w-full bg-white/10 border border-indigo-400/50 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm text-white placeholder-gray-400 transition">
+                                </div>
+                                <div>
+                                    <label for="jabatan" class="block text-sm font-medium text-indigo-200">Status</label>
+                                    <select id="jabatan" name="jabatan" required class="mt-1 block w-full bg-indigo-800/60 border border-indigo-400/50 rounded-md shadow-sm py-3 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm text-white transition">
+                                        <option>Guru</option>
+                                        <option>Siswa</option>
+                                        <option>Alumni</option>
+                                        <option>Wali Murid</option>
+                                        <option value="Lainnya">Lainnya...</option>
+                                    </select>
+                                </div>
+                                <div id="jabatanLainnyaContainer" class="hidden">
+                                    <label for="jabatanLainnya" class="block text-sm font-medium text-indigo-200">Sebutkan Status Lainnya</label>
+                                    <input type="text" id="jabatanLainnya" name="jabatanLainnya" placeholder="Contoh: Pengawas Sekolah" class="mt-1 block w-full bg-white/10 border border-indigo-400/50 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm text-white placeholder-gray-400 transition">
+                                </div>
+                                <div>
+                                    <label for="pesan-input" class="block text-sm font-medium text-indigo-200">Pesan / Saran</label>
+                                    <textarea id="pesan-input" name="pesan" rows="4" required placeholder="Tulis pesan atau saran Anda di sini..." class="mt-1 block w-full bg-white/10 border border-indigo-400/50 rounded-md shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm text-white placeholder-gray-400 transition"></textarea>
+                                </div>
+                            </div>
+                            <div class="mt-6 text-right">
+                                <button id="submitPesanBtn" type="submit" class="inline-flex justify-center items-center gap-2 py-3 px-6 border border-transparent shadow-sm text-sm font-bold rounded-md text-indigo-700 bg-white hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400 focus:ring-offset-indigo-800 transition transform hover:scale-105">
+                                    <i class="fas fa-paper-plane"></i> Kirim Pesan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Grid 2: Slider -->
+                    <div class="scroll-reveal h-full flex flex-col">
+                         <h3 class="text-2xl font-bold mb-6 text-white flex items-center gap-3"><i class="fas fa-comments"></i> Apa Kata Mereka</h3>
+                        <div id="testimonial-carousel" class="relative w-full flex-grow">
+                            <div id="carousel-items" class="overflow-hidden relative min-h-[300px] flex items-center justify-center">
+                                <div class="text-center p-8 rounded-2xl">Memuat pesan...</div>
+                            </div>
+                            <button id="prev-btn" class="absolute top-1/2 -left-5 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 rounded-full p-3 shadow-md transition hidden disabled:opacity-50">
+                                <i class="fas fa-chevron-left text-white"></i>
+                            </button>
+                            <button id="next-btn" class="absolute top-1/2 -right-5 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 rounded-full p-3 shadow-md transition hidden disabled:opacity-50">
+                                <i class="fas fa-chevron-right text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-indigo-200 py-12">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <div>
+                <p id="footer-school-name" class="font-bold text-xl text-white mb-2">Nama Sekolah</p>
+                <p id="footer-address" class="text-sm">Memuat alamat...</p>
+            </div>
+            <div>
+                <h3 class="font-bold text-xl text-white mb-4">Tautan</h3>
+                <div id="footer-social-links" class="flex flex-col space-y-2 items-center md:items-start">
+                </div>
+            </div>
+             <div>
+                <h3 class="font-bold text-xl text-white mb-4">Peta Lokasi</h3>
+                <div class="overflow-hidden rounded-lg shadow-md">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.521260322732!2d106.819543614769!3d-6.194741995514668!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f42c2f646b53%3A0x33717d5a5744485!2sMonumen%20Nasional!5e0!3m2!1sid!2sid!4v1628886400000!5m2!1sid!2sid" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="visiMisiModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                <h3 class="text-2xl font-bold text-indigo-700 flex items-center gap-3"><i class="fas fa-flag-checkered"></i> Visi, Misi & Tujuan Sekolah</h3>
+                <button onclick="closeModal('visiMisiModal')" class="text-gray-400 hover:text-gray-800 text-3xl font-bold">&times;</button>
+            </div>
+            <div class="p-8 overflow-y-auto">
+                <div class="mb-8">
+                    <h4 class="text-2xl font-bold text-gray-800 mb-4 border-l-4 border-indigo-500 pl-4">Visi</h4>
+                    <p id="modal-visi-sekolah" class="text-gray-600 text-lg leading-relaxed italic bg-indigo-50 p-6 rounded-lg">Memuat visi...</p>
+                </div>
+                <div class="mb-8">
+                    <h4 class="text-2xl font-bold text-gray-800 mb-4 border-l-4 border-indigo-500 pl-4">Misi</h4>
+                    <div id="modal-misi-sekolah" class="text-gray-600 space-y-4">
+                        <p>Memuat misi...</p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-2xl font-bold text-gray-800 mb-4 border-l-4 border-indigo-500 pl-4">Tujuan</h4>
+                    <div id="modal-tujuan-sekolah" class="text-gray-600 space-y-4">
+                        <p>Memuat tujuan...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="announcementModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-full overflow-y-auto relative transform scale-95 transition-transform duration-300">
+            <button onclick="closeModal('announcementModal')" class="absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-3xl font-bold">&times;</button>
+            <img id="announcement-modal-image" src="" alt="Gambar Pengumuman" class="w-full h-64 object-cover rounded-t-lg bg-gray-200">
+            <div class="p-8">
+                <h3 id="announcement-modal-title" class="text-2xl font-bold mb-4"></h3>
+                <p id="announcement-modal-text" class="text-gray-600 mb-6"></p>
+                <a id="announcement-modal-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">Baca Selengkapnya</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden items-center justify-center p-4 transition-opacity duration-300" onclick="closeModal('imageModal')">
+        <div class="relative transform scale-95 transition-transform duration-300">
+            <button onclick="closeModal('imageModal')" class="absolute -top-12 right-0 text-white text-4xl font-bold">&times;</button>
+            <img id="image-modal-src" src="" alt="Tampilan Penuh" class="max-w-screen-lg max-h-screen-80 rounded-lg shadow-2xl">
+        </div>
+    </div>
+    
+    <div id="notificationModal" class="fixed inset-0 bg-black bg-opacity-75 z-[60] hidden items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-sm p-6 text-center transform scale-95 transition-transform duration-300">
+            <h3 id="notification-title" class="text-xl font-bold mb-2"></h3>
+            <p id="notification-message" class="text-gray-600 mb-4"></p>
+            <button onclick="closeModal('notificationModal')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">Tutup</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- 3. Tambahkan script Swiper.js -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <script>
+	const _0x103ed1=_0x3101;(function(_0x14fa90,_0x1fc7a4){const _0x549b21=_0x3101,_0x3cb532=_0x14fa90();while(!![]){try{const _0x4d9d0a=parseInt(_0x549b21(0x188))/0x1+-parseInt(_0x549b21(0x170))/0x2+parseInt(_0x549b21(0x1dc))/0x3+-parseInt(_0x549b21(0x1a4))/0x4*(-parseInt(_0x549b21(0x212))/0x5)+parseInt(_0x549b21(0x1af))/0x6*(parseInt(_0x549b21(0x176))/0x7)+parseInt(_0x549b21(0x1ae))/0x8*(-parseInt(_0x549b21(0x1e8))/0x9)+parseInt(_0x549b21(0x13f))/0xa*(-parseInt(_0x549b21(0x222))/0xb);if(_0x4d9d0a===_0x1fc7a4)break;else _0x3cb532['push'](_0x3cb532['shift']());}catch(_0x7e9234){_0x3cb532['push'](_0x3cb532['shift']());}}}(_0x2868,0x9fc5f));const firebaseConfig={'apiKey':_0x103ed1(0x1dd),'authDomain':_0x103ed1(0x124),'projectId':_0x103ed1(0x196),'storageBucket':_0x103ed1(0x169),'messagingSenderId':_0x103ed1(0x15d),'appId':_0x103ed1(0x11f)};!firebase[_0x103ed1(0x1df)][_0x103ed1(0x202)]&&firebase[_0x103ed1(0x1bc)](firebaseConfig);const db=firebase['firestore'](),SCRIPT_URL='https://script.google.com/macros/s/AKfycbxeChltlFgbBGpZUKqZlSU2wiwU01XDxm4SWurwhPNCvk8H0elIgH7UvwOKG7lAAmw/exec';async function loadWebsiteData(){const _0x32b1e8=_0x103ed1;try{const _0x1edde7=await db[_0x32b1e8(0x21d)](_0x32b1e8(0x1c8))[_0x32b1e8(0x1d7)](_0x32b1e8(0x1eb))[_0x32b1e8(0x159)]();if(!_0x1edde7[_0x32b1e8(0x1d1)]){console[_0x32b1e8(0x1d0)](_0x32b1e8(0x180));return;}const _0x41277f=_0x1edde7[_0x32b1e8(0x1aa)](),_0x2a93b=await db[_0x32b1e8(0x21d)]('siswa')[_0x32b1e8(0x159)](),_0x3ad23b=[];_0x2a93b[_0x32b1e8(0x204)](_0x2e9910=>{const _0x17629c=_0x32b1e8;_0x3ad23b[_0x17629c(0x19f)](_0x2e9910[_0x17629c(0x1aa)]());});const _0x4c767a=await db[_0x32b1e8(0x21d)](_0x32b1e8(0x1c3))[_0x32b1e8(0x12d)](_0x32b1e8(0x1f7),'==','6A')[_0x32b1e8(0x12d)]('role','==','Guru')['limit'](0x1)[_0x32b1e8(0x159)]();let _0x4e1143=null;!_0x4c767a[_0x32b1e8(0x120)]&&(_0x4e1143=_0x4c767a[_0x32b1e8(0x143)][0x0]['data']()),populateHeader(_0x41277f),populateHero(_0x41277f),populateAbout(_0x41277f,_0x4e1143),populateInfoKelas(_0x41277f),populateAnnouncements(_0x41277f),populateYoutubeVideos(_0x41277f),populateSiswa(_0x3ad23b,_0x41277f),populateGallery(_0x41277f),populateTestimonials(),populateFooter(_0x41277f),loadAndRender7KaihChart(_0x41277f);}catch(_0x3ebec0){console[_0x32b1e8(0x1d0)]('Gagal\x20memuat\x20data\x20website:',_0x3ebec0);}finally{initScrollReveal();}}function populateHeader(_0x39995e){const _0x3791bf=_0x103ed1,_0x56daad=_0x39995e[_0x3791bf(0x1b2)]||{};document[_0x3791bf(0x1ee)]=_0x56daad['namaSekolah']||_0x3791bf(0x21c),document[_0x3791bf(0x1d2)](_0x3791bf(0x16c))[_0x3791bf(0x17a)]=_0x56daad[_0x3791bf(0x166)]||'Nama\x20Sekolah';const _0x1a8a37=document[_0x3791bf(0x1d2)](_0x3791bf(0x1da));_0x56daad[_0x3791bf(0x13e)]&&(_0x1a8a37[_0x3791bf(0x17d)]=_0x56daad['logo']);const _0x593166=document['querySelector'](_0x3791bf(0x190));_0x56daad[_0x3791bf(0x13e)]&&_0x593166&&(_0x593166['href']=_0x56daad[_0x3791bf(0x13e)]);}function populateHero(_0x5f43b6){const _0x5d9b33=_0x103ed1,_0x5c5a3e=_0x5f43b6[_0x5d9b33(0x1b2)]||{},_0x3f34e1=document[_0x5d9b33(0x1d2)](_0x5d9b33(0x199));_0x3f34e1[_0x5d9b33(0x192)]=_0x5d9b33(0x1d6)+(_0x5c5a3e[_0x5d9b33(0x166)]||_0x5d9b33(0x140))+_0x5d9b33(0x12e),document[_0x5d9b33(0x1d2)](_0x5d9b33(0x148))[_0x5d9b33(0x17a)]=_0x5c5a3e[_0x5d9b33(0x1d8)]?.[_0x5d9b33(0x141)]||_0x5d9b33(0x157);const _0x2e8f30=document[_0x5d9b33(0x1d2)](_0x5d9b33(0x201));_0x5c5a3e['fotoSekolah']&&(_0x2e8f30[_0x5d9b33(0x16f)][_0x5d9b33(0x21b)]=_0x5d9b33(0x210)+_0x5c5a3e[_0x5d9b33(0x1be)]+'\x27)');}function populateAbout(_0x3652c7,_0x510681){const _0x17a1d9=_0x103ed1,_0x5ec272=_0x3652c7[_0x17a1d9(0x1b2)]||{},_0xb71f20=_0x5ec272[_0x17a1d9(0x1d8)]||{};document['getElementById'](_0x17a1d9(0x191))['textContent']=_0x5ec272['sambutanKepsek']||_0x17a1d9(0x1f1);_0x510681?(document[_0x17a1d9(0x1d2)](_0x17a1d9(0x146))[_0x17a1d9(0x17a)]=_0x510681[_0x17a1d9(0x152)]||_0x17a1d9(0x167),_0x510681['foto']&&(document[_0x17a1d9(0x1d2)]('foto-sambutan')['src']=_0x510681[_0x17a1d9(0x16a)])):(document['getElementById'](_0x17a1d9(0x146))[_0x17a1d9(0x17a)]=_0x5ec272[_0x17a1d9(0x1ad)]||'Nama\x20Kepala\x20Sekolah',_0x5ec272[_0x17a1d9(0x178)]&&(document[_0x17a1d9(0x1d2)](_0x17a1d9(0x165))[_0x17a1d9(0x17d)]=_0x5ec272[_0x17a1d9(0x178)]));const _0xffb318=_0xb71f20['visi']||'Visi\x20belum\x20diisi.',_0x80e4bf=document[_0x17a1d9(0x1d2)]('visi-sekolah-summary');_0x80e4bf&&(_0x80e4bf['textContent']=_0xffb318['substring'](0x0,0x96)+(_0xffb318[_0x17a1d9(0x202)]>0x96?'...':''));const _0x253b9f=document[_0x17a1d9(0x1d2)](_0x17a1d9(0x223));_0x253b9f&&(_0x253b9f[_0x17a1d9(0x17a)]=_0xb71f20['visi']||'Visi\x20belum\x20diisi.');const _0x3a5457=document[_0x17a1d9(0x1d2)](_0x17a1d9(0x215));if(_0x3a5457){const _0x3cce4b=_0xb71f20['misi']||_0x17a1d9(0x216),_0x2a4e9a=document['createElement'](_0x17a1d9(0x19a));_0x2a4e9a[_0x17a1d9(0x192)]=_0x3cce4b;const _0x33ef78=_0x2a4e9a['querySelectorAll'](_0x17a1d9(0x1f8));let _0x1df49a='';_0x33ef78[_0x17a1d9(0x202)]>0x0?_0x33ef78[_0x17a1d9(0x204)](_0xc11f6a=>{const _0x4a4bf4=_0x17a1d9;_0xc11f6a['textContent']['trim']()!==''&&(_0x1df49a+='<div\x20class=\x22flex\x20items-start\x20gap-4\x20p-4\x20rounded-lg\x20hover:bg-gray-50\x20transition-colors\x22><i\x20class=\x22fas\x20fa-check-double\x20text-indigo-500\x20mt-1\x22></i><span>'+_0xc11f6a[_0x4a4bf4(0x17a)]+_0x4a4bf4(0x18b));}):_0x1df49a=_0x3cce4b,_0x3a5457['innerHTML']=_0x1df49a;}const _0x2c06e6=document[_0x17a1d9(0x1d2)](_0x17a1d9(0x186));if(_0x2c06e6){const _0x43a741=_0xb71f20[_0x17a1d9(0x127)]||_0x17a1d9(0x1e1),_0x4dcda3=document['createElement'](_0x17a1d9(0x19a));_0x4dcda3[_0x17a1d9(0x192)]=_0x43a741;const _0x363715=_0x4dcda3[_0x17a1d9(0x1e4)](_0x17a1d9(0x1f8));let _0x3cba38='';_0x363715[_0x17a1d9(0x202)]>0x0?_0x363715[_0x17a1d9(0x204)](_0x140544=>{const _0x5041bc=_0x17a1d9;_0x140544['textContent']['trim']()!==''&&(_0x3cba38+=_0x5041bc(0x1e2)+_0x140544[_0x5041bc(0x17a)]+_0x5041bc(0x18b));}):_0x3cba38=_0x43a741,_0x2c06e6['innerHTML']=_0x3cba38;}}function populateInfoKelas(_0x4df908){const _0x12cdbf=_0x103ed1,_0x5b0f78=_0x4df908[_0x12cdbf(0x1b2)]?.['infoKelas']||{},_0x4cd328='https://placehold.co/300x400/F3F4F6/AAAAAA?text=Belum+Diatur';document[_0x12cdbf(0x1d2)](_0x12cdbf(0x1fa))[_0x12cdbf(0x17d)]=_0x5b0f78[_0x12cdbf(0x128)]||_0x4cd328,document[_0x12cdbf(0x1d2)](_0x12cdbf(0x1b9))[_0x12cdbf(0x17d)]=_0x5b0f78[_0x12cdbf(0x156)]||_0x4cd328,document[_0x12cdbf(0x1d2)](_0x12cdbf(0x181))['src']=_0x5b0f78['strukturOrganisasi']||_0x4cd328,document[_0x12cdbf(0x1d2)](_0x12cdbf(0x20a))[_0x12cdbf(0x17d)]=_0x5b0f78[_0x12cdbf(0x179)]||_0x4cd328;}function populateAnnouncements(_0x28d1bb){const _0x4f3230=_0x103ed1,_0xe34d86=document[_0x4f3230(0x1d2)]('announcements-grid'),_0x135238=_0x28d1bb[_0x4f3230(0x1b2)]||{},_0x500d30=_0x135238['pengumuman']||{},_0x533aa1=document[_0x4f3230(0x1d2)](_0x4f3230(0x1ab));_0x135238[_0x4f3230(0x1be)]?(_0x533aa1[_0x4f3230(0x13d)][_0x4f3230(0x1d3)](_0x4f3230(0x1bf)),_0x533aa1[_0x4f3230(0x16f)][_0x4f3230(0x21b)]=_0x4f3230(0x210)+_0x135238[_0x4f3230(0x1be)]+'\x27)',document[_0x4f3230(0x1d2)](_0x4f3230(0x203))[_0x4f3230(0x13d)][_0x4f3230(0x1b4)](_0x4f3230(0x153)),document['getElementById'](_0x4f3230(0x206))[_0x4f3230(0x13d)]['add'](_0x4f3230(0x217),'text-indigo-700'),document[_0x4f3230(0x1d2)]('berita-subtitle')[_0x4f3230(0x13d)]['add'](_0x4f3230(0x155),_0x4f3230(0x14a))):_0x533aa1['classList'][_0x4f3230(0x1d3)](_0x4f3230(0x1e6));_0xe34d86['innerHTML']='';let _0x58ce2d=![];const _0x4dfb25=_0x543c78=>{const _0x47e4cb=_0x4f3230;if(!_0x543c78)return'';return _0x543c78[_0x47e4cb(0x16d)](/\\/g,'\x5c\x5c')[_0x47e4cb(0x16d)](/'/g,'\x5c\x27')[_0x47e4cb(0x16d)](/"/g,_0x47e4cb(0x1ce))[_0x47e4cb(0x16d)](/\n/g,'\x5cn')[_0x47e4cb(0x16d)](/\r/g,'\x5cr');};for(let _0x497349=0x1;_0x497349<=0x3;_0x497349++){const _0x1b500f=_0x500d30[_0x4f3230(0x18f)+_0x497349];if(_0x1b500f&&_0x1b500f['pengumuman'+_0x497349+'Judul']){_0x58ce2d=!![];const _0x28e232=_0x1b500f[_0x4f3230(0x18f)+_0x497349+_0x4f3230(0x19e)]||'',_0x5440ea=_0x1b500f['pengumuman'+_0x497349+_0x4f3230(0x1f6)]||'',_0x374a09=_0x1b500f[_0x4f3230(0x18f)+_0x497349+_0x4f3230(0x150)]||_0x4f3230(0x1e7),_0x643370=_0x1b500f[_0x4f3230(0x18f)+_0x497349+_0x4f3230(0x11b)]||'#',_0x1dcd04=_0x4dfb25(_0x28e232),_0x4df7e7=_0x4dfb25(_0x5440ea),_0x58639b=_0x4dfb25(_0x374a09),_0x2f912b=_0x4dfb25(_0x643370),_0x700253=_0x4f3230(0x194)+_0x1dcd04+_0x4f3230(0x161)+_0x58639b+_0x4f3230(0x1b1)+_0x4df7e7+_0x4f3230(0x119)+_0x2f912b+'\x27)\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<img\x20src=\x22'+_0x374a09+_0x4f3230(0x1b7)+_0x28e232+_0x4f3230(0x182)+_0x28e232+'</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20class=\x22text-gray-600\x20text-sm\x22>'+_0x5440ea[_0x4f3230(0x139)](0x0,0x64)+(_0x5440ea[_0x4f3230(0x202)]>0x64?_0x4f3230(0x195):'')+_0x4f3230(0x1b0);_0xe34d86['insertAdjacentHTML'](_0x4f3230(0x173),_0x700253);}}if(!_0x58ce2d){const _0x22ab90=_0x135238['fotoSekolah']?_0x4f3230(0x217):_0x4f3230(0x208);_0xe34d86[_0x4f3230(0x192)]='<p\x20class=\x22col-span-full\x20text-center\x20'+_0x22ab90+'\x20relative\x22>Tidak\x20ada\x20pengumuman\x20saat\x20ini.</p>';}}function _0x2868(){const _0x575850=['mobile-laporan-button','preventDefault','Dokumen\x20pengaturan\x20tidak\x20ditemukan!','img-struktur-organisasi','\x22\x20class=\x22w-full\x20h-56\x20object-cover\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22p-6\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3\x20class=\x22text-xl\x20font-bold\x20mb-2\x20text-gray-800\x22>','opacity-100','bangunPagi','makananSayur','modal-tujuan-sekolah','announcement-modal-title','107969Myvtgw','addEventListener','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','</span></div>','makanBergizi','timestamp','rgba(245,\x20158,\x2011,\x200.7)','pengumuman','link[rel=\x22icon\x22]','teks-sambutan','innerHTML','active','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22bg-white\x20rounded-2xl\x20shadow-lg\x20overflow-hidden\x20transform\x20hover:-translate-y-2\x20transition-transform\x20duration-300\x20scroll-reveal\x20cursor-pointer\x22\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20onclick=\x22openAnnouncementModal(\x27','...','agungp-23b34','#6B7280','siswa','school-name-hero','div','belajar','jabatanLainnya','announcement-modal-image','Judul','push','rgba(239,\x2068,\x2068,\x200.7)','rgba(22,\x20163,\x2074,\x200.7)','then','json','35816eyqWPq','.scroll-reveal','ibadah','beribadah','submit','kaihChart','data','berita','https://www.youtube.com/embed/','namaKepsek','16uniHyw','1339146AkRIry','</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','\x27,\x20`','infoSekolah','querySelector','remove','required','<a\x20href=\x22https://wa.me/','\x22\x20alt=\x22','kurangText','img-jadwal-piket','tidurCepat','Poppins','initializeApp','\x22</p><div><p\x20class=\x22font-bold\x20text-white\x20text-xl\x22>','fotoSekolah','parallax-bg','pesanForm','Jabatan','finally','users','Error\x20submitting\x20form:','createElement','carousel-item\x20w-full','footer-address','pengaturan','disabled','mobile-chevron','laporan','jabatan','canvas','&quot;','\x22\x20target=\x22_blank\x22\x20rel=\x22noopener\x20noreferrer\x22\x20class=\x22hover:text-white\x20transition\x20flex\x20items-center\x20gap-2\x20justify-center\x20md:justify-start\x22><i\x20class=\x22fab\x20fa-youtube\x20fa-fw\x22></i>\x20Youtube</a>','error','exists','getElementById','add','bottom','flex','Selamat\x20Datang\x20di\x20Kelas\x20VI-A\x20<br>\x20<span\x20class=\x22text-yellow-300\x22>','doc','visiMisi','\x27)\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22mt-4\x20flex\x20flex-col\x20items-center\x20justify-start\x20flex-grow\x22\x20style=\x22min-height:\x206rem;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3\x20class=\x22text-lg\x20font-bold\x20text-white\x20bg-black/30\x20backdrop-blur-sm\x20rounded-md\x20px-2\x20py-1\x20inline-block\x22>','school-logo-nav','imageModal','2921031IsHKbT','AIzaSyBzBDsyG-XOD8n_IbwdSmpaAw5lnPqt9QI','Belajar','apps','insertAdjacentHTML','<p>Tujuan\x20belum\x20diisi.</p>','<div\x20class=\x22flex\x20items-start\x20gap-4\x20p-4\x20rounded-lg\x20hover:bg-gray-50\x20transition-colors\x22><i\x20class=\x22fas\x20fa-bullseye\x20text-indigo-500\x20mt-1\x22></i><span>','text-indigo-700','querySelectorAll','siswa-swiper-wrapper','bg-indigo-50','https://placehold.co/600x400/E0E7FF/3730A3?text=Info','1910763fGxFlv','ease-in-out','\x22\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20class=\x22w-40\x20h-40\x20rounded-full\x20object-cover\x20mx-auto\x20shadow-lg\x20border-4\x20border-white\x20bg-gray-200\x20cursor-pointer\x20transform\x20hover:scale-105\x20transition-transform\x22\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20onclick=\x22openImageModal(\x27','global','terbiasaText','.swiper-pagination','title','</p><p\x20class=\x22text-sm\x20text-indigo-300\x22>','<i\x20class=\x22fas\x20fa-spinner\x20fa-spin\x20mr-2\x22></i>\x20Mengirim...','Sambutan\x20belum\x20diisi.','catch','Gagal\x20memuat\x20testimonials:','kegiatanMasyarakat','desc','Text','kelas','p,\x20li','href','img-jadwal-pelajaran','rotate-180','slice','youtube-grid','makananLauk','terbiasaValue','Pesan','home','length','berita-bg-overlay','forEach','olahraga','berita-title','Terima\x20Kasih!','text-gray-500','siswa-bg-overlay','img-kesepakatan-kelas','height','05:00','taatValue','DOMContentLoaded','width','url(\x27','POST','515bbjiXG','hpAdmin','appendChild','modal-misi-sekolah','<p>Misi\x20belum\x20diisi.</p>','text-white','display','<div\x20class=\x22w-full\x20text-center\x20','Beribadah','backgroundImage','Selamat\x20Datang','collection','Bermasyarakat','filter','getContext','Terbiasa','10483CLsGtA','modal-visi-sekolah','announcement-modal-text','center','image-modal-src','scale-95','`,\x20\x27','siswa-title','Dokumen','inline-block','tempatBelajar','Olahraga','1:1013129803727:web:97bf8baac74e07643884ba','empty','\x22\x20target=\x22_blank\x22\x20rel=\x22noopener\x20noreferrer\x22\x20class=\x22hover:text-white\x20transition\x20flex\x20items-center\x20gap-2\x20justify-center\x20md:justify-start\x22><i\x20class=\x22fab\x20fa-facebook-f\x20fa-fw\x22></i>\x20Facebook</a>','bar','rincianOlahraga','agungp-23b34.firebaseapp.com','bermasyarakat','taatText','tujuan','jadwalPelajaran','</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20class=\x22text-indigo-200\x20font-semibold\x20bg-black/30\x20backdrop-blur-sm\x20rounded-md\x20px-2\x20py-1\x20inline-block\x20mt-1\x22>Kelas\x20','<div\x20class=\x22bg-white/10\x20backdrop-blur-lg\x20rounded-2xl\x20shadow-lg\x20p-8\x20md:p-10\x20text-center\x20border\x20border-white/10\x20h-full\x20flex\x20flex-col\x20justify-center\x22><p\x20class=\x22text-indigo-100\x20italic\x20text-lg\x20mb-6\x20leading-relaxed\x20flex-grow\x22>\x22','facebook','mobile-menu','where','</span>','toggle','<a\x20href=\x22','fillText','</p></div></div>','totalHari','mobile-menu-button','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22swiper-slide\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22text-center\x20scroll-reveal\x20student-card\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22relative\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<img\x20src=\x22','reverse','announcementModal','\x22\x20target=\x22_blank\x22\x20rel=\x22noopener\x20noreferrer\x22\x20class=\x22hover:text-white\x20transition\x20flex\x20items-center\x20gap-2\x20justify-center\x20md:justify-start\x22><i\x20class=\x22fab\x20fa-whatsapp\x20fa-fw\x22></i>\x20WhatsApp</a>','substring','namaSiswa','prev-btn','youtubeLinks','classList','logo','14330FuznbF','Nama\x20Sekolah','visi','Grafik\x20Predikat\x20-\x20Kelas\x20VIA','docs','trim','className','nama-sambutan','16px\x20Poppins','hero-vision','.siswa-swiper','text-gray-600','Makan\x20Bergizi','makananKarbo','<div\x20class=\x22text-center\x20p-8\x20bg-white/10\x20backdrop-blur-lg\x20rounded-2xl\x20shadow-lg\x22>Gagal\x20memuat\x20pesan.</div>','notificationModal','click','Gambar','materiBelajar','nama','hidden','match','text-indigo-200','jadwalPiket','Mencetak\x20Generasi\x20Cerdas,\x20Kreatif,\x20dan\x20Berakhlak\x20Mulia.','none','get','orderBy','map','carousel-items','1013129803727','reveal','gallery-grid','next-btn','\x27,\x20\x27','textAlign','submitPesanBtn','Bangun\x20Pagi','foto-sambutan','namaSekolah','Guru\x20Kelas\x20VI-A','youtube','agungp-23b34.firebasestorage.app','foto','value','school-name-nav','replace','footer-social-links','style','11192qdHIrb','siswa-subtitle','\x22\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20title=\x22YouTube\x20video\x20player\x22\x20frameborder=\x220\x22\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20allow=\x22accelerometer;\x20autoplay;\x20clipboard-write;\x20encrypted-media;\x20gyroscope;\x20picture-in-picture\x22\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20allowfullscreen>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</iframe>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','beforeend','alamat','Nama','14MMhvfy','.transform','fotoKepsek','kesepakatanKelas','textContent','stringify','instagram','src'];_0x2868=function(){return _0x575850;};return _0x2868();}function convertYoutubeUrlToEmbed(_0x4e3fa1){const _0x164945=_0x103ed1;if(!_0x4e3fa1)return null;let _0x5ab0c8=null;const _0x30f434=/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,_0x53d215=_0x4e3fa1[_0x164945(0x154)](_0x30f434);return _0x53d215&&_0x53d215[0x1]&&(_0x5ab0c8=_0x53d215[0x1]),_0x5ab0c8?_0x164945(0x1ac)+_0x5ab0c8:null;}function populateYoutubeVideos(_0x32493a){const _0x171d49=_0x103ed1,_0x34a069=document['getElementById'](_0x171d49(0x1fd)),_0x273ef0=_0x32493a[_0x171d49(0x1b2)]?.[_0x171d49(0x13c)]||[];_0x34a069[_0x171d49(0x192)]='';let _0x3784e3='';_0x273ef0&&_0x273ef0[_0x171d49(0x202)]>0x0&&_0x273ef0[_0x171d49(0x204)](_0x4bc1b6=>{const _0x32ada4=_0x171d49,_0x59f632=convertYoutubeUrlToEmbed(_0x4bc1b6);_0x59f632&&(_0x3784e3+='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22scroll-reveal\x20rounded-lg\x20overflow-hidden\x20shadow-lg\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22relative\x20w-full\x22\x20style=\x22padding-top:\x2056.25%;\x22>\x20<!--\x2016:9\x20aspect\x20ratio\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<iframe\x20class=\x22absolute\x20top-0\x20left-0\x20w-full\x20h-full\x22\x20src=\x22'+_0x59f632+_0x32ada4(0x172));}),_0x3784e3?_0x34a069[_0x171d49(0x192)]=_0x3784e3:_0x34a069['innerHTML']='<p\x20class=\x22col-span-full\x20text-center\x20text-gray-500\x22>Tidak\x20ada\x20video\x20yang\x20tersedia\x20saat\x20ini.</p>';}function populateSiswa(_0x1c607b,_0x5256a1){const _0x2aff8a=_0x103ed1,_0x32ba98=document[_0x2aff8a(0x1d2)](_0x2aff8a(0x1e5));_0x32ba98[_0x2aff8a(0x192)]='';const _0x5ae1b0=_0x5256a1[_0x2aff8a(0x1b2)]||{},_0x43ae70=document[_0x2aff8a(0x1d2)](_0x2aff8a(0x198));_0x5ae1b0[_0x2aff8a(0x1be)]&&(_0x43ae70['classList'][_0x2aff8a(0x1d3)](_0x2aff8a(0x1bf)),_0x43ae70[_0x2aff8a(0x16f)]['backgroundImage']=_0x2aff8a(0x210)+_0x5ae1b0[_0x2aff8a(0x1be)]+'\x27)',document[_0x2aff8a(0x1d2)](_0x2aff8a(0x209))[_0x2aff8a(0x13d)][_0x2aff8a(0x1b4)](_0x2aff8a(0x153)),document[_0x2aff8a(0x1d2)](_0x2aff8a(0x11a))[_0x2aff8a(0x13d)]['remove'](_0x2aff8a(0x1e3)),document[_0x2aff8a(0x1d2)]('siswa-title')['classList'][_0x2aff8a(0x1d3)](_0x2aff8a(0x217)),document[_0x2aff8a(0x1d2)](_0x2aff8a(0x171))['classList'][_0x2aff8a(0x1b4)](_0x2aff8a(0x14a)),document[_0x2aff8a(0x1d2)](_0x2aff8a(0x171))[_0x2aff8a(0x13d)][_0x2aff8a(0x1d3)]('text-indigo-200'));if(_0x1c607b&&_0x1c607b[_0x2aff8a(0x202)]>0x0)_0x1c607b['forEach'](_0x531984=>{const _0x58e00a=_0x2aff8a,_0x143621=_0x531984[_0x58e00a(0x16a)]||'https://placehold.co/300x300/EFEFEF/AAAAAA?text=Foto',_0x371895=_0x531984[_0x58e00a(0x152)]||'Nama\x20Siswa',_0x524470=_0x531984['kelas']||'',_0x25ea1b=_0x58e00a(0x135)+_0x143621+'\x22\x20alt=\x22Foto\x20'+_0x371895+_0x58e00a(0x1ea)+_0x143621+_0x58e00a(0x1d9)+_0x371895+_0x58e00a(0x129)+_0x524470+_0x58e00a(0x18a);_0x32ba98[_0x58e00a(0x1e0)](_0x58e00a(0x173),_0x25ea1b);}),new Swiper(_0x2aff8a(0x149),{'slidesPerView':0x2,'spaceBetween':0xa,'loop':!![],'autoplay':{'delay':0xbb8,'disableOnInteraction':![]},'pagination':{'el':_0x2aff8a(0x1ed),'clickable':!![]},'breakpoints':{0x280:{'slidesPerView':0x3,'spaceBetween':0x14},0x300:{'slidesPerView':0x4,'spaceBetween':0x1e},0x400:{'slidesPerView':0x5,'spaceBetween':0x1e}}});else{const _0x4e5842=_0x5ae1b0[_0x2aff8a(0x1be)]?'text-white':_0x2aff8a(0x208);_0x32ba98[_0x2aff8a(0x192)]=_0x2aff8a(0x219)+_0x4e5842+'\x20relative\x22>Data\x20siswa\x20belum\x20tersedia.</div>';}}function populateGallery(_0x5eb530){const _0x2960d9=_0x103ed1,_0x42bcf9=document[_0x2960d9(0x1d2)](_0x2960d9(0x15f)),_0x31ecd9=_0x5eb530[_0x2960d9(0x1b2)]?.['galeri']||[];_0x42bcf9[_0x2960d9(0x192)]='',_0x31ecd9[_0x2960d9(0x202)]>0x0?_0x31ecd9['forEach'](_0x1c5cba=>{const _0x37d844=_0x2960d9,_0x4dd48f='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22scroll-reveal\x20cursor-pointer\x20group\x20overflow-hidden\x20rounded-lg\x20shadow-md\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<img\x20src=\x22'+_0x1c5cba+'\x22\x20alt=\x22Foto\x20Galeri\x22\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20class=\x22w-full\x20h-full\x20object-cover\x20aspect-square\x20transform\x20group-hover:scale-110\x20transition-transform\x20duration-300\x22\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20onclick=\x22openImageModal(\x27'+_0x1c5cba+'\x27)\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20';_0x42bcf9[_0x37d844(0x1e0)](_0x37d844(0x173),_0x4dd48f);}):_0x42bcf9['innerHTML']='<p\x20class=\x22col-span-full\x20text-center\x20text-gray-500\x22>Belum\x20ada\x20foto\x20di\x20galeri.</p>';}function populateFooter(_0x350761){const _0x184b37=_0x103ed1,_0x22bdc0=_0x350761[_0x184b37(0x1b2)]||{};document[_0x184b37(0x1d2)]('footer-school-name')[_0x184b37(0x17a)]=_0x22bdc0[_0x184b37(0x166)]||_0x184b37(0x140),document[_0x184b37(0x1d2)](_0x184b37(0x1c7))['textContent']=_0x22bdc0[_0x184b37(0x174)]||'Alamat\x20belum\x20diatur.';const _0x318c98=document[_0x184b37(0x1d2)](_0x184b37(0x16e));_0x318c98[_0x184b37(0x192)]='';_0x22bdc0['facebook']&&(_0x318c98[_0x184b37(0x192)]+=_0x184b37(0x130)+_0x22bdc0[_0x184b37(0x12b)]+_0x184b37(0x121));_0x22bdc0[_0x184b37(0x17c)]&&(_0x318c98[_0x184b37(0x192)]+=_0x184b37(0x130)+_0x22bdc0[_0x184b37(0x17c)]+'\x22\x20target=\x22_blank\x22\x20rel=\x22noopener\x20noreferrer\x22\x20class=\x22hover:text-white\x20transition\x20flex\x20items-center\x20gap-2\x20justify-center\x20md:justify-start\x22><i\x20class=\x22fab\x20fa-instagram\x20fa-fw\x22></i>\x20Instagram</a>');_0x22bdc0[_0x184b37(0x168)]&&(_0x318c98['innerHTML']+=_0x184b37(0x130)+_0x22bdc0['youtube']+_0x184b37(0x1cf));if(_0x22bdc0[_0x184b37(0x213)]){const _0x2656f6=_0x22bdc0[_0x184b37(0x213)][_0x184b37(0x16d)](/\D/g,'');_0x318c98[_0x184b37(0x192)]+=_0x184b37(0x1b6)+_0x2656f6+_0x184b37(0x138);}}function openModal(_0x5c290e){const _0x49726c=_0x103ed1,_0x2a2da2=document[_0x49726c(0x1d2)](_0x5c290e);_0x2a2da2[_0x49726c(0x13d)][_0x49726c(0x1b4)](_0x49726c(0x153)),_0x2a2da2[_0x49726c(0x13d)][_0x49726c(0x1d3)](_0x49726c(0x1d5)),setTimeout(()=>{const _0x560b78=_0x49726c;_0x2a2da2[_0x560b78(0x13d)][_0x560b78(0x1d3)](_0x560b78(0x183));const _0x435ac9=_0x2a2da2['querySelector'](_0x560b78(0x177));if(_0x435ac9)_0x435ac9[_0x560b78(0x13d)][_0x560b78(0x1b4)](_0x560b78(0x118));},0xa);}function openAnnouncementModal(_0x403bb7,_0x496a64,_0x2dfb17,_0x34a74a){const _0x410fe8=_0x103ed1;document['getElementById'](_0x410fe8(0x187))[_0x410fe8(0x17a)]=_0x403bb7,document[_0x410fe8(0x1d2)](_0x410fe8(0x19d))[_0x410fe8(0x17d)]=_0x496a64,document[_0x410fe8(0x1d2)](_0x410fe8(0x224))[_0x410fe8(0x17a)]=_0x2dfb17;const _0x1de5f7=document[_0x410fe8(0x1d2)]('announcement-modal-link');_0x34a74a&&_0x34a74a!=='#'?(_0x1de5f7[_0x410fe8(0x1f9)]=_0x34a74a,_0x1de5f7[_0x410fe8(0x16f)]['display']=_0x410fe8(0x11c)):_0x1de5f7['style'][_0x410fe8(0x218)]=_0x410fe8(0x158),openModal(_0x410fe8(0x137));}function openImageModal(_0x263a20){const _0x38e165=_0x103ed1;document[_0x38e165(0x1d2)](_0x38e165(0x117))[_0x38e165(0x17d)]=_0x263a20,openModal(_0x38e165(0x1db));}function showNotification(_0x31398e,_0x4e283c){const _0xad1e47=_0x103ed1;document['getElementById']('notification-title')[_0xad1e47(0x17a)]=_0x31398e,document['getElementById']('notification-message')['textContent']=_0x4e283c,openModal(_0xad1e47(0x14e));}function closeModal(_0x5db14b){const _0xd40c26=_0x103ed1,_0x575d7e=document[_0xd40c26(0x1d2)](_0x5db14b);_0x575d7e['classList']['remove']('opacity-100');const _0x38e9db=_0x575d7e[_0xd40c26(0x1b3)]('.transform');if(_0x38e9db)_0x38e9db[_0xd40c26(0x13d)][_0xd40c26(0x1d3)](_0xd40c26(0x118));setTimeout(()=>{const _0x1fc173=_0xd40c26;_0x575d7e['classList'][_0x1fc173(0x1d3)](_0x1fc173(0x153)),_0x575d7e[_0x1fc173(0x13d)][_0x1fc173(0x1b4)]('flex');},0x12c);}let testimonials=[],currentIndex=0x0,carouselInterval=null;function startCarousel(){const _0x3171c2=_0x103ed1;if(carouselInterval)clearInterval(carouselInterval);testimonials[_0x3171c2(0x202)]>0x1&&(carouselInterval=setInterval(()=>{const _0x5d4685=_0x3171c2;currentIndex=(currentIndex+0x1)%testimonials[_0x5d4685(0x202)],showSlide(currentIndex);},0x1b58));}async function populateTestimonials(){const _0x49bcb2=_0x103ed1;try{const _0x3acbea=await fetch(SCRIPT_URL),_0x47d343=await _0x3acbea[_0x49bcb2(0x1a3)]();testimonials=_0x47d343[_0x49bcb2(0x1fc)](-0x5)[_0x49bcb2(0x136)](),renderTestimonials();}catch(_0x29a6a3){console[_0x49bcb2(0x1d0)](_0x49bcb2(0x1f3),_0x29a6a3);const _0x4c2c30=document['getElementById']('carousel-items');_0x4c2c30[_0x49bcb2(0x192)]=_0x49bcb2(0x14d);}}function renderTestimonials(){const _0x497a23=_0x103ed1,_0x1c1ab0=document[_0x497a23(0x1d2)](_0x497a23(0x15c));testimonials[_0x497a23(0x202)]>0x0?(_0x1c1ab0[_0x497a23(0x192)]='',testimonials[_0x497a23(0x204)]((_0x99f384,_0x4ec91c)=>{const _0x2daeb7=_0x497a23,_0x1525b6=document[_0x2daeb7(0x1c5)](_0x2daeb7(0x19a));_0x1525b6[_0x2daeb7(0x145)]=_0x2daeb7(0x1c6);if(_0x4ec91c===0x0)_0x1525b6['classList']['add'](_0x2daeb7(0x193));_0x1525b6[_0x2daeb7(0x192)]=_0x2daeb7(0x12a)+_0x99f384[_0x2daeb7(0x200)]+_0x2daeb7(0x1bd)+_0x99f384[_0x2daeb7(0x175)]+_0x2daeb7(0x1ef)+_0x99f384[_0x2daeb7(0x1c1)]+_0x2daeb7(0x132),_0x1c1ab0[_0x2daeb7(0x214)](_0x1525b6);}),testimonials[_0x497a23(0x202)]>0x1&&(document[_0x497a23(0x1d2)]('prev-btn')[_0x497a23(0x13d)]['remove']('hidden'),document[_0x497a23(0x1d2)]('next-btn')[_0x497a23(0x13d)][_0x497a23(0x1b4)](_0x497a23(0x153)),startCarousel())):_0x1c1ab0[_0x497a23(0x192)]='<div\x20class=\x22text-center\x20p-8\x20bg-white/10\x20backdrop-blur-lg\x20rounded-2xl\x20shadow-lg\x22>Belum\x20ada\x20pesan.\x20Jadilah\x20yang\x20pertama!</div>';}function showSlide(_0x5f2b7f){const _0x3979f7=_0x103ed1,_0x2f7817=document['querySelectorAll']('.carousel-item');_0x2f7817[_0x3979f7(0x204)]((_0x2b3fbb,_0x1b0c55)=>{const _0x532215=_0x3979f7;_0x2b3fbb[_0x532215(0x13d)]['remove'](_0x532215(0x193)),_0x1b0c55===_0x5f2b7f&&_0x2b3fbb[_0x532215(0x13d)][_0x532215(0x1d3)]('active');});}function _0x3101(_0x48aec1,_0x3e43a8){const _0x2868f3=_0x2868();return _0x3101=function(_0x310197,_0x2780b1){_0x310197=_0x310197-0x117;let _0x5033c9=_0x2868f3[_0x310197];return _0x5033c9;},_0x3101(_0x48aec1,_0x3e43a8);}async function loadAndRender7KaihChart(_0x5a72d4){const _0x116b56=_0x103ed1;try{const _0x3bc96d=await db[_0x116b56(0x21d)](_0x116b56(0x1cb))[_0x116b56(0x15a)](_0x116b56(0x18d),_0x116b56(0x1f5))[_0x116b56(0x159)](),_0x117d89=_0x3bc96d[_0x116b56(0x143)][_0x116b56(0x15b)](_0x2acde6=>_0x2acde6[_0x116b56(0x1aa)]()),_0x4f31a0=processStudentData(_0x117d89,_0x5a72d4),_0x560499=processClassData(_0x4f31a0,_0x5a72d4);renderGlobalChart(_0x560499,_0x5a72d4);}catch(_0x4378ba){console[_0x116b56(0x1d0)]('Gagal\x20memuat\x20data\x20untuk\x20grafik\x207KAIH:',_0x4378ba);const _0x111a0c=document[_0x116b56(0x1d2)](_0x116b56(0x1a9))[_0x116b56(0x220)]('2d');_0x111a0c['font']=_0x116b56(0x147),_0x111a0c['fillStyle']=_0x116b56(0x197),_0x111a0c[_0x116b56(0x162)]=_0x116b56(0x225),_0x111a0c[_0x116b56(0x131)]('Gagal\x20memuat\x20data\x20grafik.',_0x111a0c[_0x116b56(0x1cd)][_0x116b56(0x20f)]/0x2,_0x111a0c[_0x116b56(0x1cd)][_0x116b56(0x20b)]/0x2);}}function processStudentData(_0x46bf32,_0x2eb593){const _0x8d6c9e=_0x103ed1,{ibadahSettings:ibadahSettings=[],waktu:waktu={}}=_0x2eb593,_0x467afa=ibadahSettings[_0x8d6c9e(0x21f)](_0x5d1004=>_0x5d1004)[_0x8d6c9e(0x202)],_0x45b29b=waktu[_0x8d6c9e(0x184)]||_0x8d6c9e(0x20c),_0x133a63=waktu[_0x8d6c9e(0x1ba)]||'21:00',_0x3a7a2d={};return _0x46bf32[_0x8d6c9e(0x204)](_0x5a8a09=>{const _0x3725d1=_0x8d6c9e;if(!_0x5a8a09[_0x3725d1(0x1f7)]||!_0x5a8a09[_0x3725d1(0x13a)])return;const _0x201645=_0x5a8a09[_0x3725d1(0x1f7)]+'-'+_0x5a8a09['namaSiswa'];if(!_0x3a7a2d[_0x201645])_0x3a7a2d[_0x201645]={'kelas':_0x5a8a09[_0x3725d1(0x1f7)],'nama':_0x5a8a09[_0x3725d1(0x13a)],'totalHari':0x0,'beribadah':0x0,'tidurCepat':0x0,'bangunPagi':0x0,'olahraga':0x0,'belajar':0x0,'bermasyarakat':0x0,'makanBergizi':0x0};const _0x5a98e1=_0x3a7a2d[_0x201645];_0x5a98e1[_0x3725d1(0x133)]++;let _0x3ab5c0=0x0;for(let _0x53b0ff=0x0;_0x53b0ff<0x7;_0x53b0ff++){if(ibadahSettings[_0x53b0ff]&&String(_0x5a8a09[_0x3725d1(0x1a6)+(_0x53b0ff+0x1)]||'')[_0x3725d1(0x144)]())_0x3ab5c0++;}if(_0x467afa>0x0&&_0x3ab5c0>=_0x467afa)_0x5a98e1[_0x3725d1(0x1a7)]++;if(_0x5a8a09['bangunPagi']&&_0x5a8a09['bangunPagi']<=_0x45b29b)_0x5a98e1[_0x3725d1(0x184)]++;if(_0x5a8a09[_0x3725d1(0x1ba)]&&_0x5a8a09[_0x3725d1(0x1ba)]<=_0x133a63)_0x5a98e1['tidurCepat']++;if(String(_0x5a8a09[_0x3725d1(0x123)]||'')[_0x3725d1(0x144)]())_0x5a98e1[_0x3725d1(0x205)]++;if(String(_0x5a8a09[_0x3725d1(0x11d)]||'')['trim']()&&String(_0x5a8a09[_0x3725d1(0x151)]||'')[_0x3725d1(0x144)]())_0x5a98e1[_0x3725d1(0x19b)]++;if(String(_0x5a8a09[_0x3725d1(0x1f4)]||'')[_0x3725d1(0x144)]())_0x5a98e1[_0x3725d1(0x125)]++;if(_0x5a8a09[_0x3725d1(0x14c)]&&_0x5a8a09[_0x3725d1(0x185)]&&_0x5a8a09['makananSusu']&&_0x5a8a09[_0x3725d1(0x1fe)]&&_0x5a8a09['makananAir'])_0x5a98e1[_0x3725d1(0x18c)]++;}),_0x3a7a2d;}function processClassData(_0x42cf9a,_0x30b7ce){const _0x1bf790=_0x103ed1,{predikat:predikat={}}=_0x30b7ce,_0x9cda2a={},_0x54a25f=[_0x1bf790(0x1a7),'tidurCepat',_0x1bf790(0x184),'olahraga',_0x1bf790(0x19b),_0x1bf790(0x125),_0x1bf790(0x18c)];for(const _0x365cee in _0x42cf9a){const _0x433af4=_0x42cf9a[_0x365cee];!_0x9cda2a[_0x433af4[_0x1bf790(0x1f7)]]&&(_0x9cda2a[_0x433af4['kelas']]={},_0x54a25f[_0x1bf790(0x204)](_0x5cf488=>_0x9cda2a[_0x433af4[_0x1bf790(0x1f7)]][_0x5cf488]={})),_0x54a25f[_0x1bf790(0x204)](_0x6cb0d1=>{const _0x2e8860=_0x1bf790;let _0x4cf7af=predikat[_0x2e8860(0x1b8)]||'Perlu\x20Peningkatan';if(_0x433af4[_0x2e8860(0x133)]>0x0){const _0x276f85=_0x433af4[_0x6cb0d1]/_0x433af4['totalHari']*0x64;if(_0x276f85>=(predikat[_0x2e8860(0x20d)]||0x55))_0x4cf7af=predikat[_0x2e8860(0x126)]||'Anak\x20Hebat';else _0x276f85>=(predikat[_0x2e8860(0x1ff)]||0x46)&&(_0x4cf7af=predikat[_0x2e8860(0x1ec)]||_0x2e8860(0x221));}_0x9cda2a[_0x433af4[_0x2e8860(0x1f7)]][_0x6cb0d1][_0x4cf7af]=(_0x9cda2a[_0x433af4['kelas']][_0x6cb0d1][_0x4cf7af]||0x0)+0x1;});}return _0x9cda2a;}function renderGlobalChart(_0x12c898,_0x369ee7){const _0x4a0b2f=_0x103ed1,{predikat:predikat={}}=_0x369ee7,_0x565151=predikat[_0x4a0b2f(0x126)]||'Anak\x20Hebat',_0x1fa046=predikat[_0x4a0b2f(0x1ec)]||_0x4a0b2f(0x221),_0x51d6c2=predikat['kurangText']||'Perlu\x20Peningkatan',_0x29d71a=[_0x4a0b2f(0x21a),'Tidur\x20Cepat',_0x4a0b2f(0x164),_0x4a0b2f(0x11e),_0x4a0b2f(0x1de),_0x4a0b2f(0x21e),_0x4a0b2f(0x14b)],_0x5b9692=[_0x4a0b2f(0x1a7),_0x4a0b2f(0x1ba),_0x4a0b2f(0x184),_0x4a0b2f(0x205),_0x4a0b2f(0x19b),_0x4a0b2f(0x125),_0x4a0b2f(0x18c)],_0x251385=[],_0x39c1d8=[],_0x1b9852=[];_0x5b9692[_0x4a0b2f(0x204)](_0x1076d7=>{const _0x1c6de9=_0x4a0b2f;let _0x145b6e=0x0,_0x43dbab=0x0,_0x227b5a=0x0;Object['values'](_0x12c898)[_0x1c6de9(0x204)](_0xa279a1=>{_0xa279a1[_0x1076d7]&&(_0x145b6e+=_0xa279a1[_0x1076d7][_0x565151]||0x0,_0x43dbab+=_0xa279a1[_0x1076d7][_0x1fa046]||0x0,_0x227b5a+=_0xa279a1[_0x1076d7][_0x51d6c2]||0x0);}),_0x251385[_0x1c6de9(0x19f)](_0x145b6e),_0x39c1d8[_0x1c6de9(0x19f)](_0x43dbab),_0x1b9852[_0x1c6de9(0x19f)](_0x227b5a);});const _0x2d93d9=document[_0x4a0b2f(0x1d2)]('kaihChart')['getContext']('2d');new Chart(_0x2d93d9,{'type':_0x4a0b2f(0x122),'data':{'labels':_0x29d71a,'datasets':[{'label':_0x565151,'data':_0x251385,'backgroundColor':_0x4a0b2f(0x1a1)},{'label':_0x1fa046,'data':_0x39c1d8,'backgroundColor':_0x4a0b2f(0x18e)},{'label':_0x51d6c2,'data':_0x1b9852,'backgroundColor':_0x4a0b2f(0x1a0)}]},'options':{'responsive':!![],'maintainAspectRatio':![],'scales':{'x':{'stacked':!![]},'y':{'stacked':!![],'beginAtZero':!![]}},'plugins':{'title':{'display':!![],'text':_0x4a0b2f(0x142),'font':{'size':0x12,'family':_0x4a0b2f(0x1bb)}},'legend':{'labels':{'font':{'family':_0x4a0b2f(0x1bb)}}}}}});}function initScrollReveal(){const _0x452a0d=_0x103ed1;ScrollReveal()[_0x452a0d(0x15e)](_0x452a0d(0x1a5),{'delay':0xc8,'distance':'50px','origin':_0x452a0d(0x1d4),'duration':0x320,'easing':_0x452a0d(0x1e9),'reset':![],'viewFactor':0.2});}document[_0x103ed1(0x189)](_0x103ed1(0x20e),loadWebsiteData);const mobileMenuButton=document[_0x103ed1(0x1d2)](_0x103ed1(0x134)),mobileMenu=document[_0x103ed1(0x1d2)](_0x103ed1(0x12c));mobileMenuButton['addEventListener'](_0x103ed1(0x14f),()=>{const _0x8a554d=_0x103ed1;mobileMenu[_0x8a554d(0x13d)][_0x8a554d(0x12f)](_0x8a554d(0x153));}),document[_0x103ed1(0x1d2)](_0x103ed1(0x160))[_0x103ed1(0x189)](_0x103ed1(0x14f),()=>{const _0x18d18e=_0x103ed1;currentIndex=(currentIndex+0x1)%testimonials[_0x18d18e(0x202)],showSlide(currentIndex),startCarousel();}),document[_0x103ed1(0x1d2)](_0x103ed1(0x13b))['addEventListener'](_0x103ed1(0x14f),()=>{const _0x1a3f0a=_0x103ed1;currentIndex=(currentIndex-0x1+testimonials[_0x1a3f0a(0x202)])%testimonials[_0x1a3f0a(0x202)],showSlide(currentIndex),startCarousel();});const jabatanSelect=document[_0x103ed1(0x1d2)](_0x103ed1(0x1cc)),jabatanLainnyaContainer=document['getElementById']('jabatanLainnyaContainer'),jabatanLainnyaInput=document['getElementById'](_0x103ed1(0x19c));jabatanSelect[_0x103ed1(0x189)]('change',()=>{const _0x255580=_0x103ed1;jabatanSelect['value']==='Lainnya'?(jabatanLainnyaContainer[_0x255580(0x13d)][_0x255580(0x1b4)](_0x255580(0x153)),jabatanLainnyaInput['required']=!![]):(jabatanLainnyaContainer[_0x255580(0x13d)][_0x255580(0x1d3)](_0x255580(0x153)),jabatanLainnyaInput[_0x255580(0x1b5)]=![]);}),document['getElementById'](_0x103ed1(0x1c0))[_0x103ed1(0x189)](_0x103ed1(0x1a8),function(_0x50913d){const _0x1eaa87=_0x103ed1;_0x50913d[_0x1eaa87(0x17f)]();const _0x31a0a7=document[_0x1eaa87(0x1d2)](_0x1eaa87(0x163));_0x31a0a7[_0x1eaa87(0x1c9)]=!![],_0x31a0a7[_0x1eaa87(0x192)]=_0x1eaa87(0x1f0);let _0x321613=jabatanSelect['value'];_0x321613==='Lainnya'&&(_0x321613=jabatanLainnyaInput[_0x1eaa87(0x16b)]);const _0x50e9d7={'nama':document[_0x1eaa87(0x1d2)](_0x1eaa87(0x152))[_0x1eaa87(0x16b)],'jabatan':_0x321613,'pesan':document[_0x1eaa87(0x1d2)]('pesan-input')[_0x1eaa87(0x16b)]};fetch(SCRIPT_URL,{'method':_0x1eaa87(0x211),'body':JSON[_0x1eaa87(0x17b)](_0x50e9d7)})[_0x1eaa87(0x1a2)](()=>{const _0x490e50=_0x1eaa87;showNotification(_0x490e50(0x207),'Pesan\x20Anda\x20telah\x20berhasil\x20terkirim.'),this['reset'](),jabatanLainnyaContainer['classList']['add'](_0x490e50(0x153)),setTimeout(populateTestimonials,0x7d0);})[_0x1eaa87(0x1f2)](_0x4e65ef=>{const _0x57940f=_0x1eaa87;console[_0x57940f(0x1d0)](_0x57940f(0x1c4),_0x4e65ef),showNotification('Gagal!','Terjadi\x20kesalahan\x20saat\x20mengirim\x20pesan.');})[_0x1eaa87(0x1c2)](()=>{const _0xa2234e=_0x1eaa87;_0x31a0a7[_0xa2234e(0x1c9)]=![],_0x31a0a7[_0xa2234e(0x192)]='<i\x20class=\x22fas\x20fa-paper-plane\x22></i>\x20Kirim\x20Pesan';});});const mobileLaporanButton=document[_0x103ed1(0x1d2)](_0x103ed1(0x17e)),mobileLaporanDropdown=document['getElementById']('mobile-laporan-dropdown'),mobileChevron=document[_0x103ed1(0x1d2)](_0x103ed1(0x1ca));mobileLaporanButton['addEventListener'](_0x103ed1(0x14f),()=>{const _0x4614a4=_0x103ed1;mobileLaporanDropdown[_0x4614a4(0x13d)][_0x4614a4(0x12f)](_0x4614a4(0x153)),mobileChevron['classList']['toggle'](_0x4614a4(0x1fb));});
+
+    </script>
+</body>
+</html>
+

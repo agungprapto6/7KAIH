@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+	<link rel="icon" type="image/x-icon" href="">
+    <title>Cek Database Firestore</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        h1 { color: #333; }
+        #output { 
+            background-color: #f4f4f4; 
+            border: 1px solid #ddd;
+            padding: 15px;
+            white-space: pre-wrap; /* Agar format JSON rapi */
+            word-wrap: break-word;
+            max-height: 60vh;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <h1>Data dari Database</h1>
+    <!-- DIUBAH: Menambahkan 'laporan' dalam deskripsi -->
+    <p>Klik tombol di bawah untuk mengambil dan menampilkan semua data dari koleksi 'pengaturan', 'users', 'siswa', dan 'laporan'.</p>
+
+    <button onclick="fetchAllData()">Ambil Data Sekarang</button>
+    <button id="downloadBtn" style="display:none;" onclick="downloadData()">Download Data (.json)</button>
+    
+    <pre id="output">Data akan ditampilkan di sini...</pre>
+
+    <!-- Memuat Firebase SDK versi 8 yang kompatibel dengan kode di bawah -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script>
+	function _0x1d07(_0x108dbb,_0x347013){const _0x5a4948=_0x5a49();return _0x1d07=function(_0x1d0771,_0x103054){_0x1d0771=_0x1d0771-0x171;let _0x14cdeb=_0x5a4948[_0x1d0771];return _0x14cdeb;},_0x1d07(_0x108dbb,_0x347013);}const _0xde9e0d=_0x1d07;(function(_0x52796b,_0x52301e){const _0x31f080=_0x1d07,_0x9cd4aa=_0x52796b();while(!![]){try{const _0x94a593=parseInt(_0x31f080(0x173))/0x1*(parseInt(_0x31f080(0x19d))/0x2)+-parseInt(_0x31f080(0x172))/0x3+-parseInt(_0x31f080(0x193))/0x4+parseInt(_0x31f080(0x183))/0x5*(parseInt(_0x31f080(0x195))/0x6)+parseInt(_0x31f080(0x179))/0x7*(-parseInt(_0x31f080(0x199))/0x8)+parseInt(_0x31f080(0x186))/0x9*(parseInt(_0x31f080(0x184))/0xa)+parseInt(_0x31f080(0x17f))/0xb*(parseInt(_0x31f080(0x181))/0xc);if(_0x94a593===_0x52301e)break;else _0x9cd4aa['push'](_0x9cd4aa['shift']());}catch(_0x518040){_0x9cd4aa['push'](_0x9cd4aa['shift']());}}}(_0x5a49,0x78393));const firebaseConfig={'apiKey':'AIzaSyBzBDsyG-XOD8n_IbwdSmpaAw5lnPqt9QI','authDomain':_0xde9e0d(0x187),'projectId':_0xde9e0d(0x18b),'storageBucket':_0xde9e0d(0x19a),'messagingSenderId':_0xde9e0d(0x17e),'appId':_0xde9e0d(0x19b)};!firebase[_0xde9e0d(0x18a)][_0xde9e0d(0x189)]&&firebase[_0xde9e0d(0x194)](firebaseConfig);const db=firebase['firestore'](),outputElement=document[_0xde9e0d(0x171)](_0xde9e0d(0x177));let fullData={};async function fetchCollection(_0x3e761a){const _0x20458f=_0xde9e0d,_0x4f5069=await db[_0x20458f(0x188)](_0x3e761a)[_0x20458f(0x185)](),_0x4ef185={};return _0x4f5069[_0x20458f(0x192)](_0x8f491d=>{const _0x241596=_0x20458f;_0x4ef185[_0x8f491d['id']]=_0x8f491d[_0x241596(0x182)]();}),_0x4ef185;}async function fetchAllData(){const _0x10f931=_0xde9e0d;outputElement[_0x10f931(0x17d)]=_0x10f931(0x175);try{const [_0x20ef3f,_0x57c8b2,_0x8485e5,_0x4887ee]=await Promise[_0x10f931(0x18f)]([fetchCollection('pengaturan'),fetchCollection('users'),fetchCollection(_0x10f931(0x174)),fetchCollection('laporan')]);fullData={'pengaturan':_0x20ef3f,'users':_0x57c8b2,'siswa':_0x8485e5,'laporan':_0x4887ee},outputElement[_0x10f931(0x17d)]=JSON[_0x10f931(0x196)](fullData,null,0x2),document[_0x10f931(0x171)](_0x10f931(0x17b))[_0x10f931(0x178)]['display']=_0x10f931(0x19c);}catch(_0x5d62b2){outputElement[_0x10f931(0x17d)]=_0x10f931(0x18d)+_0x5d62b2,console[_0x10f931(0x17c)](_0x10f931(0x190),_0x5d62b2);}}function downloadData(){const _0x156601=_0xde9e0d,_0xfcf89d=_0x156601(0x18e)+encodeURIComponent(JSON[_0x156601(0x196)](fullData,null,0x2)),_0x381e0e=document[_0x156601(0x17a)]('a');_0x381e0e[_0x156601(0x197)](_0x156601(0x198),_0xfcf89d),_0x381e0e[_0x156601(0x197)](_0x156601(0x18c),_0x156601(0x191)),document['body'][_0x156601(0x180)](_0x381e0e),_0x381e0e['click'](),_0x381e0e[_0x156601(0x176)]();}function _0x5a49(){const _0x4bd088=['agungp-23b34.firebaseapp.com','collection','length','apps','agungp-23b34','download','Gagal\x20mengambil\x20data.\x20Error:\x20\x0a','data:text/json;charset=utf-8,','all','Error\x20fetching\x20data:\x20','database_backup.json','forEach','3053804AmxWJf','initializeApp','4815066EqWAgS','stringify','setAttribute','href','376UvVmMg','agungp-23b34.firebasestorage.app','1:1013129803727:web:97bf8baac74e07643884ba','inline-block','2TBgTDJ','getElementById','408144NsNZvq','139661bUhreS','siswa','Mengambil\x20data,\x20mohon\x20tunggu...','remove','output','style','124943ElCpGz','createElement','downloadBtn','error','textContent','1013129803727','11iBkdVy','appendChild','12656976rphCRJ','data','5lRgOCa','10iMJxte','get','2105253sWTBno'];_0x5a49=function(){return _0x4bd088;};return _0x5a49();}
+    </script>
+</body>
+</html>
+
